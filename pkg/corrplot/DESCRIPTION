@@ -5,7 +5,7 @@ Version: 0.1-0
 Date: 2009-06-24
 Author: Taiyun Wei
 Maintainer: Taiyun Wei <weitaiyun@gmail.name>
-Description: The corrplot package is a graphical display of a correlation matrix, test for correlation, and other visualization methods about association and correlation..
+Description: The corrplot package is a graphical display of a correlation matrix, test for correlation, and other visualization methods about association and correlation.
 License: GPL-2 | GPL-3
 LazyLoad: yes
 URL: http://corrplot.r-forge.r-project.org

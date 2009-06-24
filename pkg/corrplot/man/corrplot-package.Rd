@@ -18,8 +18,7 @@ Date: \tab 2009-06-22\cr
 License: \tab GPL-2 | GPL-3\cr
 LazyLoad: \tab yes\cr
 }
-~~ An overview of how to use the package, including the most ~~
-~~ important functions ~~
+
 }
 \author{
 Taiyun Wei
@@ -27,11 +26,17 @@ Taiyun Wei
 Maintainer:Taiyun Wei <weitaiyun@gmail.com>
 }
 \references{
-~~ Literature or other references for background information ~~
+Michael Friendly (2002). 
+\emph{Corrgrams: Exploratory displays for correlation matrices}.
+The American Statistician, 56, 316--324.
+
+
+D.J. Murdoch, E.D. Chow (1996).
+\emph{A graphical display of large correlation matrices}.
+The American Statistician, 50, 178--180.
 }
-~~ Optionally other standard keywords, one per line, from file ~~
-~~ KEYWORDS in the R documentation directory ~~
-\keyword{ package }
+
+\keyword{visualization}
 \seealso{
 The \code{plotcorr} function in the \code{ellipse} package and \code{corrgram} function in the \code{corrgram} package has some similarities.
 }
