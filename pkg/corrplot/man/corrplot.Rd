@@ -57,7 +57,7 @@ corrplot.pie(...)
 corrplot.shade(...)
 corrplot.square(...)
 corrplot.shade(...)
-corrplot.mtest(...)
+corrplot.mtest(dat = NULL,...)
 }
 \arguments{
   \item{corr}{

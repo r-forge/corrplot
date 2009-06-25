@@ -1,7 +1,6 @@
 \name{corrplot-package}
 \Rdversion{1.1}
 \alias{corrplot-package}
-\alias{corrplot}
 \docType{package}
 \title{
 visualization of a correlation matrix 
