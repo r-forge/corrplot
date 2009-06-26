@@ -223,8 +223,8 @@ corrplot(corr, method="circle", order = "PCA")
 corrplot(corr, method="square", order="hclust", type="upper", diag=FALSE, pos.text="diag")
 ##same as corrplot.square(corr, order="hclust", type="upper", diag=FALSE, pos.text="diag")
 
-corrplot(corr, method="shade", order="PCA", shade.method = "negtive")
-##same as corrplot.shade(corr,order="PCA", shade.method = "negtive")
+corrplot(corr, method="shade", order="PCA", shade.method = "negtive", col.grid="white")
+##same as corrplot.shade(corr,order="PCA", shade.method = "negtive", col.grid="white")
 
 corrplot(corr, method="ellipse", order="PCA", colorkey = "min2max", type="lower", pos.text="diag")
 ##same as corrplot.ellipse(corr, order="PCA", colorkey = "min2max", type="lower", pos.text="diag")
@@ -232,8 +232,8 @@ corrplot(corr, method="ellipse", order="PCA", colorkey = "min2max", type="lower"
 corrplot(corr, method="number", order="PCA")
 ##same as corrplot.number(corr, order="PCA")
 
-corrplot(corr, method="color", order="alphabet")
-##same as corrplot.color(corr, order="alphabet")
+corrplot(corr, method="color", order="alphabet", col.grid="white")
+##same as corrplot.color(corr, order="alphabet", col.grid="white")
 
 corrplot(corr, method="pie", order="hclust", hclust.method="median")
 ##same as corrplot.pie(corr, order="hclust", hclust.method="median")

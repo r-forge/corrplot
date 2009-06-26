@@ -1,5 +1,24 @@
-corrplot <-
-function(corr,     					 
+#' Represents Correlation circles
+#'
+#' @author Taiyun Wei
+#' @param corr, Correlation matrix to represent
+#' @param col, vector the fill color of circles from -1 to 1
+#' @param bg, background color of graph
+#' @param outline,
+#' @param cex, numeric, for the variable names
+#' @param title, title of the graph
+#' @param order, the mothod of reorder the variables
+#' @param method,
+#' @param addgrid,
+#' @param col.grid,
+#' @param diag,
+#' @param addnum,
+#' @param col.num,
+#' @param lwd.shade,
+#' @param col.shade,
+#' @param ... extra parameters, currenlty ignored
+#  last modified by Taiyun 2009-4-20 0:20:11
+corrplot <- function(corr,     					 
           method = c("circle","ellipse","number","pie","shade",
     			           "square", "color"),
     			type = c("full", "lower", "upper"), bg = "white",
@@ -7,7 +26,7 @@ function(corr,
 				"#F4A582", "#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
 				"#4393C3", "#2166AC", "#053061"))(200),
              
-    			nofg = FALSE, cex = 1, title = "", scale = 1,     					  
+    			outline = FALSE, cex = 1, title = "", scale = 1,     					  
     			addcolorkey = TRUE, colorkey=c("-1to1","min2max"), 
     			cex.col.num = 0.8, mar = c(0,0,2,0),
     			
@@ -127,9 +146,9 @@ function(corr,
     len.mycorr <- length(mycorr)
     col.fill <- assign.color(col, mycorr)
     
-    if(!nofg)
+    if(outline)
     	col.border <- "black"
-    if(nofg)
+    if(!outline)
     	col.border <- col.fill 
     	
     ## calculate label-text width approximately
@@ -370,4 +389,3 @@ function(corr,
     	     squares = rep(1, len.mycorr), fg = col.grid)
     }
 } ## end
-
