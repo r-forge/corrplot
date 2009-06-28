@@ -250,9 +250,9 @@ corrplot.mtest(dat=mtcars, method="square", non_corr.method = "blank", addgrid=F
 corrplot.mtest(dat=mtcars, plotC=TRUE, method="square", addgrid=FALSE)
 
 ##the input matrix is not square
-plot.corr(corr[1:8,], method="shade")
-plot.corr(corr[1:8,], method="number",  type="upper",diag=F, addgrid=T, pos.text="diag")
-plot.corr(corr[,1:8], method="number",  type="upper",diag=F, addgrid=T, pos.text="diag")
+corrplot(corr[1:8,], method="shade")
+corrplot(corr[1:8,], method="number",  type="upper",diag=F, addgrid=T, pos.text="diag")
+corrplot(corr[,1:8], method="number",  type="upper",diag=F, addgrid=T, pos.text="diag")
 }
 
 \keyword{visualization}
