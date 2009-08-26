@@ -45,26 +45,29 @@ corrplot(corr, method = c("circle", "square", "ellipse", "number",
     addgrid = TRUE, col.grid = "gray", diag = TRUE,   
     addnum = FALSE,  col.num = NULL, 
     			
-    cor.mtest = FALSE, p.mat = NULL, conf.level = 0.95,
+    corr.mtest = FALSE, p.mat = NULL, conf.level = 0.95,
     non_corr.method = c("pch","blank"),
     pch = 4, col.pch = "red",  cex.pch = 1,
     plotConf = FALSE, low.mat = NULL, upp.mat = NULL,...)
 		
-corrplot.circle(...)
-corrplot.ellipse(...)
-corrplot.number(...)
-corrplot.pie(...)
-corrplot.shade(...)
-corrplot.square(...)
-corrplot.shade(...)
-corrplot.mtest(dat = NULL,...)
+corrplot.circle(corr, ...)
+corrplot.ellipse(corr,...)
+corrplot.number(corr, ...)
+corrplot.pie(corr, ...)
+corrplot.shade(corr, ...)
+corrplot.square(corr, ...)
+corrplot.shade(corr, ...)
+corrplot.mtest(dat = NULL, corr = NULL, p.mat = NULL, conf.level = 0.95,
+	plotConf = FALSE, low.mat = NULL, upp.mat = NULL, 
+    non_corr.method = c("pch","blank"), method = c("circle","square"),
+    pch = 4, col.pch = "black",...)
 }
 \arguments{
   \item{corr}{
 the correlation matrix, must be square if \code{order} is not \code{"original"} (default).
 }
   \item{method}{
-the visualization method of correlation matrix to be used. Currently, it support seven methods, named \code{"circle"}, \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}.
+the visualization method of correlation matrix to be used. Currently, it support seven methods, named \code{"circle"}, \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}  for function \code{corrplot}, and \code{"circle"}, \code{"square"} for function \code{corrplot.mtest}.
 }
   \item{type}{
 plot "full" matrix or just "upper" or "lower" triangular part of it.
@@ -149,7 +152,7 @@ logical, whether to plot numerical correlations on glyphs. Note: the figures are
   \item{col.num}{
 col of numerical correlations.
 }
-  \item{cor.mtest}{
+  \item{corr.mtest}{
 logical, whether to visualize the result of test for correlation. Note: need input parameters \code{dat} (only supported by function \code{corrplot.mtest}) or \code{p.mat} if \code{TRUE}.
 }
   \item{p.mat}{
@@ -162,13 +165,13 @@ confidence level for the returned confidence interval (valid in function \code{c
 the method to deal with the correlation whose p-value is less than level of significance (1-\code{conf.level}), if \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, add character on the corresponding glyphs.
 }
   \item{pch}{
-plotting character for the correlation whose p-value is less than level of significance (only valid when \code{non_corr.method} is \coed{pch}).
+plotting character for the correlation whose p-value is less than level of significance (only valid when \code{non_corr.method} is \code{pch}).
 }
   \item{col.pch}{
-the color of pch (only valid when \code{non_corr.method} is \coed{pch}).
+the color of pch (only valid when \code{non_corr.method} is \code{pch}).
 }
   \item{cex.pch}{
-the cex of pch (only valid when \code{non_corr.method} is \coed{pch}).
+the cex of pch (only valid when \code{non_corr.method} is \code{pch}).
 }
   \item{plotConf}{
 logical, whether to plot confidence interval or not. Note: need input parameters \code{dat} (only supported by function \code{corrplot.mtest}) or \code{low.mat} and \code{upp.mat} if \code{TRUE}.
@@ -179,6 +182,11 @@ matrix of the lower bound of confidence interval, function \code{corrplot.mtest}
   \item{upp.mat}{
 matrix of the upper bound of confidence interval, function \code{corrplot.mtest} can also calculate it from input parameter \code{dat} automatically.
 }
+
+  \item{dat}{
+original data.frame or matrix for function \code{corrplot.mtest},  \code{corrplot.mtest} can calculate correlation , p-value and confidence interval automatically from \item{dat}.
+}
+
   \item{\dots}{
 extra parameters.
 }
@@ -251,8 +259,8 @@ corrplot.mtest(dat=mtcars, plotC=TRUE, method="square", addgrid=FALSE)
 
 ##the input matrix is not square
 corrplot(corr[1:8,], method="shade")
-corrplot(corr[1:8,], method="number",  type="upper",diag=F, addgrid=T, pos.text="diag")
-corrplot(corr[,1:8], method="number",  type="upper",diag=F, addgrid=T, pos.text="diag")
+corrplot(corr[1:8,], method="number",  type="upper",diag=FALSE, addgrid=TRUE, pos.text="diag")
+corrplot(corr[,1:8], method="number",  type="upper",diag=FALSE, addgrid=TRUE, pos.text="diag")
 }
 
 \keyword{visualization}

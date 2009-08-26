@@ -17,37 +17,35 @@
 #' @param lwd.shade,
 #' @param col.shade,
 #' @param ... extra parameters, currenlty ignored
-#  last modified by Taiyun 2009-4-20 0:20:11
-corrplot <- function(corr,     					 
-          method = c("circle","ellipse","number","pie","shade",
-    			           "square", "color"),
-    			type = c("full", "lower", "upper"), bg = "white",
-				col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", 
-				"#F4A582", "#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
+#  last modified by Taiyun 2009-8-27 0:20:11
+corrplot <- function(corr, method = c("circle", "square", "ellipse", "number", 
+                                "pie", "shade", "color"),
+		type = c("full", "lower", "upper"), 
+		order = c("original", "alphabet", "PCA", "hclust"),
+		hclust.method = c("complete", "ward", "single", "average", 
+                       "mcquitty", "median", "centroid"),
+
+		col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
+				"#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
 				"#4393C3", "#2166AC", "#053061"))(200),
              
-    			outline = FALSE, cex = 1, title = "", scale = 1,     					  
-    			addcolorkey = TRUE, colorkey=c("-1to1","min2max"), 
-    			cex.col.num = 0.8, mar = c(0,0,2,0),
-    			
-    			addtextlabel = TRUE, pos.text = c("sides","diag"), 
-    			col.text = "red",
-    			
-    			shade.method = c("negtive", "positive", "all"),
-    			lwd.shade = 1, col.shade = "white", 
-    			
-    			order = c("original", "alphabet", "PCA", "hclust"),
-    			hclust.method = c("complete", "ward", "single", "average", 
-    			                  "mcquitty", "median", "centroid"),
-    			
-    			addgrid = TRUE, col.grid = "gray",    					  
-    			diag = TRUE, col.diag = "white",     					  
-    			addnum = FALSE,  col.num = NULL, 
-    			
-    			corr.test = FALSE,   p.mat = NULL, conf.level = 0.95,
-    			non_corr.method = c("pch","blank"),
-    			pch = 4, col.pch = "red",  cex.pch = 1,
-    			plotConf = FALSE, low.mat = NULL, upp.mat = NULL,...){
+		outline = FALSE, cex = 1, title = "", bg = "white",
+		addcolorkey = TRUE, colorkey=c("-1to1","min2max"),
+		cex.col.num = 0.8, mar = c(0,0,2,0),
+                        
+		addtextlabel = TRUE, pos.text = c("sides","diag"), col.text = "red",
+                        
+		shade.method = c("negtive", "positive", "all"),
+		lwd.shade = 1, col.shade = "white", 
+                        
+                        
+		addgrid = TRUE, col.grid = "gray", diag = TRUE,   
+		addnum = FALSE,  col.num = NULL, 
+                        
+		corr.mtest = FALSE, p.mat = NULL, conf.level = 0.95,
+		non_corr.method = c("pch","blank"),
+		pch = 4, col.pch = "red",  cex.pch = 1,
+		plotConf = FALSE, low.mat = NULL, upp.mat = NULL){
     
     if (is.null(corr)) 
         return(invisible())
@@ -128,7 +126,7 @@ corrplot <- function(corr,
       if(!diag)          diag(tmp) <- Inf
       
       myDat <- tmp[is.finite(tmp)]        
-      ind  <- which(is.finite(tmp),arr.ind = T)
+      ind  <- which(is.finite(tmp),arr.ind = TRUE)
       myPos <- ind
       myPos[,1] <-  ind[,2]
       myPos[,2] <- -ind[,1] + 1 + n
@@ -173,12 +171,12 @@ corrplot <- function(corr,
     }
     
     ## background color
-    symbols(mypos, add = TRUE, inches = F, 
+    symbols(mypos, add = TRUE, inches = FALSE, 
             squares = rep(1, len.mycorr), bg = bg, fg = bg)
     
     ## circle
     if(method=="circle"){
-    	symbols(mypos, add = TRUE,  inches = F, bg = col.fill, 
+    	symbols(mypos, add = TRUE,  inches = FALSE, bg = col.fill, 
          circles = 0.9*abs(mycorr)^0.5/2, fg = col.border)
     }
     
@@ -205,7 +203,7 @@ corrplot <- function(corr,
       
     ## pie
     if(method=="pie"){
-    	symbols(mypos, add = TRUE, inches = F,  
+    	symbols(mypos, add = TRUE, inches = FALSE,  
     	        circles = rep(0.5, len.mycorr)*0.85)
       pie.dat <- function(theta, length = 100){
       	k <- seq(pi/2, pi/2 - theta, length = 0.5*length*abs(theta)/pi)
@@ -225,7 +223,7 @@ corrplot <- function(corr,
     ## shade
     if(method=="shade"){
     	shade.method <- match.arg(shade.method)
-    	symbols(mypos, add = TRUE, inches = F, 
+    	symbols(mypos, add = TRUE, inches = FALSE, 
          squares = rep(1, len.mycorr), bg = col.fill, fg = "white")
       shade.dat <- function(w){
       	x <- w[1];  y <- w[2];  rho <- w[3] 
@@ -259,13 +257,13 @@ corrplot <- function(corr,
     
     ##square
     if(method=="square"){
-    	symbols(mypos, add = TRUE, inches = F, 
+    	symbols(mypos, add = TRUE, inches = FALSE, 
          squares = abs(mycorr)^0.5, bg = col.fill, fg = col.border)
     }
     
     ##color
     if(method=="color"){
-    	symbols(mypos, add = TRUE, inches = F, 
+    	symbols(mypos, add = TRUE, inches = FALSE, 
               squares = rep(1, len.mycorr), bg = col.fill, fg = col.fill)
     }
     
@@ -326,7 +324,7 @@ corrplot <- function(corr,
     
     title(title)
     
-    if(corr.test){
+    if(corr.mtest){
     	if(is.null(p.mat)) stop("Need p.mat!")
     	if(!order=="original")
     	    p.mat <- p.mat[ord, ord]
@@ -360,19 +358,19 @@ corrplot <- function(corr,
     	    ind2 <- which(pNew <= (1 - conf.level))
     	    if(method=="circle"){
     	       symbols(pos.uppNew[,1][ind2], pos.uppNew[,2][ind2],
-    	               add = TRUE,  inches = F, bg = col.fill[ind2], 
+    	               add = TRUE,  inches = FALSE, bg = col.fill[ind2], 
                      circles = abs(uppNew[ind2])^0.5/2, fg = col.fill[ind2])
     	       symbols(pos.lowNew[,1][ind2], pos.lowNew[,2][ind2], 
-    	               add = TRUE, inches = F, bg = "white", 
+    	               add = TRUE, inches = FALSE, bg = "white", 
                      circles = abs(lowNew[ind2])^0.5/2, fg = col.fill[ind2])
           }
           if(method=="square"){
     	       symbols(pos.uppNew[,1][ind2], pos.uppNew[,2][ind2], 
-    	               add = TRUE, inches = F, bg = col.fill[ind2], 
+    	               add = TRUE, inches = FALSE, bg = col.fill[ind2], 
     	               fg = col.fill[ind2],
                      squares = abs(uppNew[ind2])^0.5)
     	       symbols(pos.lowNew[,1][ind2], pos.lowNew[,2][ind2],  
-    	               add = TRUE, inches = F, bg = "white", 
+    	               add = TRUE, inches = FALSE, bg = "white", 
     	               fg = col.fill[ind2], 
                      squares = abs(lowNew[ind2])^0.5)             
           }
@@ -385,7 +383,7 @@ corrplot <- function(corr,
     }
     ## add grid
     if(addgrid){
-    	  symbols(mypos, add=TRUE, inches = F,  bg = NA,
+    	  symbols(mypos, add=TRUE, inches = FALSE,  bg = NA,
     	     squares = rep(1, len.mycorr), fg = col.grid)
     }
 } ## end

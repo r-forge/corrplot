@@ -1,8 +1,8 @@
 corrplot.mtest <-
-function(corr = NULL, p.mat = NULL, conf.level = 0.95,
-				plotConf = FALSE, low.mat = NULL, upp.mat = NULL, dat = NULL,
-    			non_corr.method = c("pch","blank"), method = c("circle","square"),
-    			pch = 4, col.pch = "black",...){
+function(dat = NULL, corr = NULL, p.mat = NULL, conf.level = 0.95,
+		 plotConf = FALSE, low.mat = NULL, upp.mat = NULL, 
+    	 non_corr.method = c("pch","blank"), method = c("circle","square"),
+    	 pch = 4, col.pch = "black",...){
 				
 	if(is.null(corr)&is.null(dat)&is.null(p.mat))
 		stop("need both corr and p.mat!")
@@ -21,7 +21,7 @@ function(corr = NULL, p.mat = NULL, conf.level = 0.95,
 	method <- match.arg(method)
 	non_corr.method <- match.arg(non_corr.method)
 	
-	corrplot(corr = corr, p.mat = p.mat, low.mat = low.mat, upp.mat = upp.mat,  corr.test = TRUE,
+	corrplot(corr = corr, p.mat = p.mat, low.mat = low.mat, upp.mat = upp.mat,  corr.mtest = TRUE,
 			plotConf = plotConf, method = method, non_corr.method = non_corr.method,
 			pch = pch, col.pch = col.pch, ...)
 } ## end
