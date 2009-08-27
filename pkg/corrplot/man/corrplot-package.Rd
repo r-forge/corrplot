@@ -22,7 +22,7 @@ LazyLoad: \tab yes\cr
 \author{
 Taiyun Wei
 
-Maintainer:Taiyun Wei <taiyun.wei@gmail.com>
+Maintainer:Taiyun Wei <weitaiyun@gmail.com>
 }
 \references{
 Michael Friendly (2002). 
