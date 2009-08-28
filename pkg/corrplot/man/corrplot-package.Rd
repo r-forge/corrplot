@@ -6,7 +6,7 @@
 visualization of a correlation matrix 
 }
 \description{
-The corrplot package is a graphical display of a correlation matrix, test for correlation, and some algorithms to do matrix reordering
+The corrplot package is a graphical display of a correlation matrix, test for correlation, and some algorithms to do matrix reordering.
 }
 \details{
 \tabular{ll}{
