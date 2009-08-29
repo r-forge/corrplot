@@ -48,7 +48,7 @@ corrplot(corr, method = c("circle", "square", "ellipse", "number",
     corr.mtest = FALSE, p.mat = NULL, conf.level = 0.95,
     non_corr.method = c("pch","blank"),
     pch = 4, col.pch = "red",  cex.pch = 1,
-    plotConf = FALSE, low.mat = NULL, upp.mat = NULL,...)
+    plotConf = FALSE, low.mat = NULL, upp.mat = NULL)
 		
 corrplot.circle(corr, ...)
 corrplot.ellipse(corr,...)
@@ -247,9 +247,9 @@ corrplot(corr, method="pie", order="hclust", hclust.method="median")
 ##same as corrplot.pie(corr, order="hclust", hclust.method="median")
 
 ## like Chinese wiqi
-corrplot(corr, bg="gold2", col = c("white","black"), order="PCA", nofg=TRUE, addcolorkey=FALSE)
+corrplot(corr, bg="gold2", col = c("white","black"), order="PCA", outline=TRUE, addcolorkey=FALSE)
 ## note the parameter outline
-corrplot(corr, col = c("white","black"), order="PCA", nofg=TRUE, addcolorkey=FALSE, outline=TRUE)
+corrplot(corr, col = c("white","black"), order="PCA",  addcolorkey=FALSE, outline=TRUE)
 
 ## visualize the result of test for correlation
 corrplot.mtest(dat=mtcars)
