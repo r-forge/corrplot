@@ -184,7 +184,7 @@ matrix of the upper bound of confidence interval, function \code{corrplot.mtest}
 }
 
   \item{dat}{
-original data.frame or matrix for function \code{corrplot.mtest},  \code{corrplot.mtest} can calculate correlation , p-value and confidence interval automatically from \item{dat}.
+original data.frame or matrix for function \code{corrplot.mtest},  \code{corrplot.mtest} can calculate correlation , p-value and confidence interval automatically from \code{dat}.
 }
 
   \item{\dots}{
@@ -263,5 +263,5 @@ corrplot(corr[1:8,], method="number",  type="upper",diag=FALSE, addgrid=TRUE, po
 corrplot(corr[,1:8], method="number",  type="upper",diag=FALSE, addgrid=TRUE, pos.text="diag")
 }
 
-\keyword{visualization}
-\keyword{correlation}% __ONLY ONE__ keyword per line
+\keyword{hplot}
+\keyword{multivariate}% __ONLY ONE__ keyword per line
