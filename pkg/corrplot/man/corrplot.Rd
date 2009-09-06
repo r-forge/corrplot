@@ -220,6 +220,7 @@ The \code{plotcorr} function in the \code{ellipse} package and \code{corrgram} f
 }
 
 \examples{
+\dontrun{
 
 data(mtcars)
 corr <- cor(mtcars)
@@ -261,6 +262,7 @@ corrplot.mtest(dat=mtcars, plotC=TRUE, method="square", addgrid=FALSE)
 corrplot(corr[1:8,], method="shade")
 corrplot(corr[1:8,], method="number",  type="upper",diag=FALSE, addgrid=TRUE, pos.text="diag")
 corrplot(corr[,1:8], method="number",  type="upper",diag=FALSE, addgrid=TRUE, pos.text="diag")
+}
 }
 
 \keyword{hplot}
