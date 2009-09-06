@@ -265,5 +265,4 @@ corrplot(corr[,1:8], method="number",  type="upper",diag=FALSE, addgrid=TRUE, po
 }
 }
 
-\keyword{hplot}
-\keyword{multivariate}% __ONLY ONE__ keyword per line
+\keyword{hplot}% __ONLY ONE__ keyword per line
