@@ -80,7 +80,7 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
         
         ## reorder the variables using hclhust
         if(order == "hclust"){
-        	ord <- order.dendrogram(as.dendrogram(hclust(dist(corr), 
+        	ord <- order.dendrogram(as.dendrogram(hclust(as.dist(1-corr), 
         	       method = hclust.method, ...)))
         }   
         

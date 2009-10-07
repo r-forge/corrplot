@@ -35,7 +35,7 @@ D.J. Murdoch, E.D. Chow (1996).
 The American Statistician, 50, 178--180.
 }
 
-\keyword{visualization}
+\keyword{hplot}
 \seealso{
 The \code{plotcorr} function in the \code{ellipse} package and \code{corrgram} function in the \code{corrgram} package has some similarities.
 }
