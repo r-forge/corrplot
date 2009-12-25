@@ -127,7 +127,7 @@ position of text labels, if \code{"sides"}, all the text labels will be plot on 
 the color of text label.
 }
   \item{shade.method}{
-shade method, only valid when \code{method} is \code{shade}. If \code{negtive}, then the negtive correlation will be shaded; if \code{positicve}, then the positive correlation will be shaded; If \code{all}, then all correlation will be shaded. Note: the angle of shade line is different, 45 degrees for positive and 135 degrees for negtive.
+shade method, only valid when \code{method} is \code{shade}. If \code{negative}, then the negtive correlation will be shaded; if \code{positive}, then the positive correlation will be shaded; If \code{all}, then all correlation will be shaded. Note: the angle of shade line is different, 45 degrees for positive and 135 degrees for negtive.
 }
   \item{lwd.shade}{
 the line width of shade.
@@ -199,7 +199,7 @@ extra parameters.
 
 
 \references{
-Michael Friendly (2002). 
+Michael Friendly (2002).
 \emph{Corrgrams: Exploratory displays for correlation matrices}.
 The American Statistician, 56, 316--324.
 
@@ -212,7 +212,7 @@ The American Statistician, 50, 178--180.
 Taiyun Wei
 }
 \note{
-Using circles or squares with different areas and colors to display a corelation matrix, test for correlation's p-values and confidence intervals is Taiyun Wei's pioneering work.
+Using circles or squares with different areas and colors to display a correlation matrix, test for correlation's p-values and confidence intervals is Taiyun Wei's pioneering work.
 }
 
 \seealso{
