@@ -223,31 +223,38 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     ## shade
     if(method=="shade"){
     	shade.method <- match.arg(shade.method)
-    	symbols(mypos, add = TRUE, inches = FALSE, 
-         squares = rep(1, len.mycorr), bg = col.fill, fg = "white")
-      shade.dat <- function(w){
-      	x <- w[1];  y <- w[2];  rho <- w[3] 
-      	x1 <- x - 0.5
-      	x2 <- x + 0.5
-      	y1 <- y - 0.5
-      	y2 <- y + 0.5
-      	dat <- NA
+    	symbols(mypos, add = TRUE, inches = FALSE, squares = rep(1, len.mycorr), 
+				bg = col.fill, fg = "white")
+        shade.dat <- function(w){
+			x <- w[1];  y <- w[2];  rho <- w[3] 
+			x1 <- x - 0.5
+			x2 <- x + 0.5
+			y1 <- y - 0.5
+			y2 <- y + 0.5
+			dat <- NA
       	
-      	if(shade.method=="positive"||shade.method=="all"){
-      	  if(rho >0)
-      		  dat <- cbind(c(x1, x1, x), c(y, y1, y1),
-      		               c(x, x2, x2), c(y2, y2 ,y), nrow = 3)
-      	}
-      	if(shade.method=="negtive"||shade.method=="all"){
-      	  if(rho <0)
-      		  dat <- cbind(c(x1, x1, x), c(y, y2, y2),
-      		               c(x, x2, x2), c(y1, y1 ,y), nrow = 3)
-      	}
+			if(shade.method=="positive"||shade.method=="all"){
+				if(rho >0)
+					dat <- cbind(c(x1, x1, x), c(y, y1, y1),
+      		               c(x, x2, x2), c(y2, y2 ,y))
+			}
+			if(shade.method=="negtive"||shade.method=="all"){
+				if(rho <0)
+					dat <- cbind(c(x1, x1, x), c(y, y2, y2),
+      		               c(x, x2, x2), c(y1, y1 ,y))
+			}
+			
       	return(dat)
       }
       
-      myShade.dat <- apply(cbind(mypos, mycorr), 1, shade.dat)
-      for(i in 1:len.mycorr){
+
+	pos_corr <- rbind(cbind(mypos, mycorr))
+	pos_corr2 <- list()
+	for(i in 1:nrow(pos_corr))
+		pos_corr2[[i]] <- pos_corr[i,]
+    myShade.dat <- lapply(pos_corr2,  shade.dat)
+
+    for(i in 1:len.mycorr){
     			if(all(!is.na(myShade.dat[[i]])))
     			segments(myShade.dat[[i]][,1], myShade.dat[[i]][,2], 
     			         myShade.dat[[i]][,3], myShade.dat[[i]][,4], 
