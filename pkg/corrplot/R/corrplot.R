@@ -249,9 +249,7 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
       
 
 	pos_corr <- rbind(cbind(mypos, mycorr))
-	pos_corr2 <- list()
-	for(i in 1:nrow(pos_corr))
-		pos_corr2[[i]] <- pos_corr[i,]
+	pos_corr2 <- split(pos_corr, 1:nrow(pos_corr))
     myShade.dat <- lapply(pos_corr2,  shade.dat)
 
     for(i in 1:len.mycorr){
