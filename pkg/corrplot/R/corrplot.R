@@ -244,21 +244,16 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
       		               c(x, x2, x2), c(y1, y1 ,y))
 			}
 			
-      	return(dat)
+      	return(t(dat))
       }
-      
-
+    
 	pos_corr <- rbind(cbind(mypos, mycorr))
 	pos_corr2 <- split(pos_corr, 1:nrow(pos_corr))
-    myShade.dat <- lapply(pos_corr2,  shade.dat)
-
-    for(i in 1:len.mycorr){
-    			if(all(!is.na(myShade.dat[[i]])))
-    			segments(myShade.dat[[i]][,1], myShade.dat[[i]][,2], 
-    			         myShade.dat[[i]][,3], myShade.dat[[i]][,4], 
-    			         col = col.shade, lwd = lwd.shade)
-    	}
-    }
+    myShade.dat <- matrix(na.omit(unlist(lapply(pos_corr2,  shade.dat))),byrow=TRUE, ncol=4) 
+	segments(myShade.dat[,1], myShade.dat[,2], 
+    			myShade.dat[,3], myShade.dat[,4], 
+    			col = col.shade, lwd = lwd.shade)
+    } 
     
     ##square
     if(method=="square"){
