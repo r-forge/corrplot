@@ -16,7 +16,10 @@ A visualization of a correlation matrix.
 \description{
 A graphical display of a correlation matrix, test for correlation, and other visualization methods about association and correlation. The details of graph are paid great attention to.
 
-\code{corrplot.circle}, \code{corrplot.square}, \code{corrplot.ellipse}, \code{corrplot.number}, \code{corrplot.pie}, \code{corrplot.shade}, and \code{corrplot.color} are convenience wrappers of \code{corrplot} that take the same arguments as the corresponding option it replaces such as circle, ellipse etc. The \code{corrplot} function is more flexible than the wrappers.
+\code{corrplot.circle}, \code{corrplot.square}, \code{corrplot.ellipse}, \code{corrplot.number},  
+\code{corrplot.pie}, \code{corrplot.shade}, and \code{corrplot.color} are convenience wrappers of 
+\code{corrplot} that take the same arguments as the corresponding option it replaces such 
+as circle, ellipse etc. The \code{corrplot} function is more flexible than the wrappers.
 
 \code{corrplot.mtest} function is also a wrapper of \code{corrplot}, however it can calculate correlation (input parameter \code{corr}), p-value (input parameter \code{p.mat}) and  confidence interval (input parameter \code{low.mat} and \code{upp.mat}) from original data.frame or matrix (input parameter \code{dat}) automatically, while \code{corrplot} function need more input parameters because it does not support input parameter \code{dat}. Consequently, \code{corrplot.mtest} function is strongly recommended if you want to visualize the result of test for correlation.
 }
@@ -27,7 +30,7 @@ corrplot(corr, method = c("circle", "square", "ellipse", "number",
     order = c("original", "alphabet", "PCA", "hclust"),
     hclust.method = c("complete", "ward", "single", "average", 
     	               "mcquitty", "median", "centroid"),
-	rect.hc = NA, rect.col="red",
+	rect.hc = NA, rect.col="black", rect.lwd = 2,
 	
     col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
 	    "#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
@@ -96,6 +99,11 @@ only valid when \code{order} is \code{hclust}.
 
   \item{rect.col}{
 color for rectangle border(s), only valid when \code{rect.hc} is not \code{NA}.
+}
+
+
+  \item{rect.lwd}{
+line width for borders for rectangle border(s), only valid when \code{rect.hc} is not \code{NA}.
 }
 
   \item{col}{
@@ -202,9 +210,16 @@ extra parameters.
 }
 }
 
+\value{
+(Invisibly) returns a single permutation vector.
+}
+
 \details{
-\code{method} shoud be \code{circle} or \code{square} if draw confidence interval (\code{plotConf = TRUE}).
-\code{Cairo} package is strongly recommended to produce high-quality PNG, JPEG, TIFF bitmap files, especially for that \code{method} is \code{circle}, \code{ellipse} or \code{pie}.   
+\code{method} shoud be \code{circle} or \code{square} if draw confidence 
+interval (\code{plotConf = TRUE}).
+\code{Cairo} package is strongly recommended to produce high-quality PNG, 
+JPEG, TIFF bitmap files, especially for that \code{method} is \code{circle}, 
+\code{ellipse} or \code{pie}.   
 }
 
 
@@ -243,18 +258,19 @@ corrplot(corr, method="square", order="hclust", type="upper", diag=FALSE, pos.te
 ##same as corrplot.square(corr, order="hclust", type="upper", diag=FALSE, pos.text="diag")
 
 corrplot(corr, order="hclust", rect.hc = 2)
-corrplot(corr, order="hclust", rect.hc = 3)
-corrplot(corr, order="hclust", rect.hc = 4)
+corrplot(corr, order="hclust", rect.hc = 3, rect.col = "red")
+corrplot(corr, order="hclust", rect.hc = 4, rect.col = "yellow")
 
-corrplot(corr, order="hclust", hclust.method="single", rect.hc = 3)
-corrplot(corr, order="hclust", hclust.method="average", rect.hc = 3)
-corrplot(corr, order="hclust", hclust.method="ward", rect.hc = 3)
+
+corrplot(corr, order="hclust", hclust.method="ward", rect.hc = 3) ## same as:
+corrplot(corr, order="hclust", hclust.method="ward")
+corr.rect(c(5,2,4))
 
 corrplot.shade(corr, order="PCA", shade.method = "negtive", col.grid="white")
 corrplot.shade(corr, order="PCA", shade.method = "positive", col.grid="white")
 corrplot.shade(corr, order="PCA", shade.method = "all", col.grid="white")
 
-corrplot.ellipse(corr, order="PCA", colorkey = "min2max", type="lower", pos.text="diag")
+corrplot.ellipse(corr, order="PCA", colorkey = "-1to1", type="lower", pos.text="diag")
 
 corrplot.number(corr, order="PCA")
 

@@ -25,7 +25,7 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
 		order = c("original", "alphabet", "PCA", "hclust"),
 		hclust.method = c("complete", "ward", "single", "average", 
                        "mcquitty", "median", "centroid"), 
-		rect.hc = NA, rect.col="red",
+		rect.hc = NA, rect.col="black", rect.lwd = 2,
 
 		col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
 				"#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
@@ -88,6 +88,8 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
         
         return(ord)
     }
+	
+	ord <- NA
     if(!order=="original"){
         ord <- myorder(corr, order=order)
         corr <- corr[ord,ord]
@@ -397,8 +399,8 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
 		cu <- c(0, cumsum(clustab))
 		mat <- cbind(cu[-(rect.hc + 1)] + 0.5, n - cu[-(rect.hc + 1)] + 0.5, 
 		              cu[-1] + 0.5, n - cu[-1] + 0.5)
-		rect(mat[,1], mat[,2], mat[,3], mat[,4], border = rect.col)
+		rect(mat[,1], mat[,2], mat[,3], mat[,4], border = rect.col, lwd = rect.lwd)
 	}
 	
-	#return(ord)
+	invisible(ord)
 } ## end
