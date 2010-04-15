@@ -18,19 +18,21 @@
 #' @param col.shade,
 #' @param ... extra parameters, currenlty ignored
 #  last modified by Taiyun 2009-8-27 0:20:11
+#  last modified by Taiyun 2010-4-15 0:20:11
 corrplot <- function(corr, method = c("circle", "square", "ellipse", "number", 
                                 "pie", "shade", "color"),
 		type = c("full", "lower", "upper"), 
 		order = c("original", "alphabet", "PCA", "hclust"),
 		hclust.method = c("complete", "ward", "single", "average", 
-                       "mcquitty", "median", "centroid"),
+                       "mcquitty", "median", "centroid"), 
+		rect.hc = NA, rect.col="red",
 
 		col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
 				"#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
 				"#4393C3", "#2166AC", "#053061"))(200),
              
 		outline = FALSE, cex = 1, title = "", bg = "white",
-		addcolorkey = TRUE, colorkey=c("-1to1","min2max"),
+		addcolorkey = TRUE, colorkey=c("min2max", "-1to1"),
 		cex.col.num = 0.8, mar = c(0,0,2,0),
                         
 		addtextlabel = TRUE, pos.text = c("sides","diag"), col.text = "red",
@@ -81,7 +83,7 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
         ## reorder the variables using hclhust
         if(order == "hclust"){
         	ord <- order.dendrogram(as.dendrogram(hclust(as.dist(1-corr), 
-        	       method = hclust.method, ...)))
+					method = hclust.method, ...)))
         }   
         
         return(ord)
@@ -173,7 +175,7 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     ## background color
     symbols(mypos, add = TRUE, inches = FALSE, 
             squares = rep(1, len.mycorr), bg = bg, fg = bg)
-    
+    	
     ## circle
     if(method=="circle"){
     	symbols(mypos, add = TRUE,  inches = FALSE, bg = col.fill, 
@@ -261,13 +263,13 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
          squares = abs(mycorr)^0.5, bg = col.fill, fg = col.border)
     }
     
-    ##color
+    ##  color
     if(method=="color"){
     	symbols(mypos, add = TRUE, inches = FALSE, 
               squares = rep(1, len.mycorr), bg = col.fill, fg = col.fill)
     }
-    
-    
+	
+       
     if(addcolorkey){
     	min.corr <- round(min(corr, na.rm = TRUE),2)
     	tmp <- corr
@@ -386,4 +388,17 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     	  symbols(mypos, add=TRUE, inches = FALSE,  bg = NA,
     	     squares = rep(1, len.mycorr), fg = col.grid)
     }
+	
+	##  draws rectangles 
+	if(!is.na(rect.hc)){
+		tree <- hclust(as.dist(1-corr), method = hclust.method)
+		hc <- cutree(tree, k = rect.hc)
+		clustab <- table(hc)[unique(hc[tree$order])]
+		cu <- c(0, cumsum(clustab))
+		mat <- cbind(cu[-(rect.hc + 1)] + 0.5, n - cu[-(rect.hc + 1)] + 0.5, 
+		              cu[-1] + 0.5, n - cu[-1] + 0.5)
+		rect(mat[,1], mat[,2], mat[,3], mat[,4], border = rect.col)
+	}
+	
+	#return(ord)
 } ## end

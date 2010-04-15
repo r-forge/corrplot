@@ -27,13 +27,14 @@ corrplot(corr, method = c("circle", "square", "ellipse", "number",
     order = c("original", "alphabet", "PCA", "hclust"),
     hclust.method = c("complete", "ward", "single", "average", 
     	               "mcquitty", "median", "centroid"),
-
+	rect.hc = NA, rect.col="red",
+	
     col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
 	    "#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
 	    "#4393C3", "#2166AC", "#053061"))(200),
              
     outline = FALSE, cex = 1, title = "", bg = "white",
-    addcolorkey = TRUE, colorkey=c("-1to1","min2max"),
+    addcolorkey = TRUE, colorkey=c("min2max", "-1to1"),
     cex.col.num = 0.8, mar = c(0,0,2,0),
     			
     addtextlabel = TRUE, pos.text = c("sides","diag"), col.text = "red",
@@ -86,6 +87,15 @@ the ordering method of the correlation matrix, need square matrix.
   \item{hclust.method}{
 the agglomeration method to be used when \code{order} is \code{\link{hclust}}. This should be one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
 
+}
+
+  \item{rect.hc}{
+integer, the numer of rectangles drawed on the graph according to the hierarchical cluster, 
+only valid when \code{order} is \code{hclust}. 
+}
+
+  \item{rect.col}{
+color for rectangle border(s), only valid when \code{rect.hc} is not \code{NA}.
 }
 
   \item{col}{
@@ -232,6 +242,14 @@ corrplot(corr, method="circle", order = "PCA")
 corrplot(corr, method="square", order="hclust", type="upper", diag=FALSE, pos.text="diag")
 ##same as corrplot.square(corr, order="hclust", type="upper", diag=FALSE, pos.text="diag")
 
+corrplot(corr, order="hclust", rect.hc = 2)
+corrplot(corr, order="hclust", rect.hc = 3)
+corrplot(corr, order="hclust", rect.hc = 4)
+
+corrplot(corr, order="hclust", hclust.method="single", rect.hc = 3)
+corrplot(corr, order="hclust", hclust.method="average", rect.hc = 3)
+corrplot(corr, order="hclust", hclust.method="ward", rect.hc = 3)
+
 corrplot.shade(corr, order="PCA", shade.method = "negtive", col.grid="white")
 corrplot.shade(corr, order="PCA", shade.method = "positive", col.grid="white")
 corrplot.shade(corr, order="PCA", shade.method = "all", col.grid="white")
@@ -252,7 +270,7 @@ corrplot(corr, bg="gold2", col = c("white","black"), order="PCA", outline=TRUE, 
 corrplot(corr, col = c("white","black"), order="PCA",  addcolorkey=FALSE, outline=TRUE)
 
 ## visualize the result of test for correlation
-corrplot.mtest(dat=mtcars)
+corrplot.mtest(dat=mtcars, order="hclust", rect.hc=3)
 corrplot.mtest(dat=mtcars, plotC=TRUE)
 corrplot.mtest(dat=mtcars, method="square", non_corr.method = "blank", addgrid=FALSE)
 corrplot.mtest(dat=mtcars, plotC=TRUE, method="square", addgrid=FALSE)
