@@ -217,7 +217,7 @@ extra parameters.
 \details{
 \code{method} shoud be \code{circle} or \code{square} if draw confidence 
 interval (\code{plotConf = TRUE}).
-\code{Cairo} package is strongly recommended to produce high-quality PNG, 
+\code{Cairo} and \code{cairoDevice} package is strongly recommended to produce high-quality PNG, 
 JPEG, TIFF bitmap files, especially for that \code{method} is \code{circle}, 
 \code{ellipse} or \code{pie}.   
 }
