@@ -12,8 +12,8 @@ The corrplot package is a graphical display of a correlation matrix, test for co
 \tabular{ll}{
 Package: \tab corrplot\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2009-06-22\cr
+Version: \tab 0.2-0 \cr
+Date: \tab 2010-04-16\cr
 License: \tab GPL-2 | GPL-3\cr
 LazyLoad: \tab yes\cr
 }
