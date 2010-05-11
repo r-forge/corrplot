@@ -18,7 +18,7 @@
 #' @param col.shade,
 #' @param ... extra parameters, currenlty ignored
 #  last modified by Taiyun 2009-8-27 0:20:11
-#  last modified by Taiyun 2010-4-15 0:20:11
+#  last modified by Taiyun 2010-5-11 0:20:11
 corrplot <- function(corr, method = c("circle", "square", "ellipse", "number", 
                                 "pie", "shade", "color"),
 		type = c("full", "lower", "upper"), 
@@ -160,6 +160,8 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     xlabwidth <- max(strwidth(myrownames, cex = cex))
     ylabwidth <- max(strwidth(mycolnames, cex = cex))
     S1 <- nn*mm   
+	
+	if(!addtextlabel) xlabwidth <- xlabwidth <- 0
     ## set up an empty plot with the appropriate dimensions
     if(!addcolorkey){
       plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5), 
