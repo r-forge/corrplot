@@ -25,46 +25,40 @@ as circle, ellipse etc. The \code{corrplot} function is more flexible than the w
 }
 \usage{
 corrplot(corr, method = c("circle", "square", "ellipse", "number", 
-				"pie", "shade", "color"),
-    type = c("full", "lower", "upper"), 
-    order = c("original", "alphabet", "PCA", "hclust"),
-    hclust.method = c("complete", "ward", "single", "average", 
-    	               "mcquitty", "median", "centroid"),
-	rect.hc = NA, rect.col="black", rect.lwd = 2,
-	
-    col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
-	    "#FDDBC7", "#F7F7F7", "#D1E5F0", "#92C5DE", 
-	    "#4393C3", "#2166AC", "#053061"))(200),
+                                "pie", "shade", "color"),
+		type = c("full", "lower", "upper"), 
+		order = c("original", "alphabet", "PCA", "hclust"),
+		hclust.method = c("complete", "ward", "single", "average", 
+                       "mcquitty", "median", "centroid"), 
+		rect.hc = NA, rect.col="black", rect.lwd = 2,
+
+		col = colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", 
+				"#FDDBC7", "#FFFFFF", "#D1E5F0", "#92C5DE", 
+				"#4393C3", "#2166AC", "#053061"))(200),
              
-    outline = FALSE, cex = 1, title = "", bg = "white",
-    addcolorkey = TRUE, colorkey=c("min2max", "-1to1"),
-    cex.col.num = 0.8, mar = c(0,0,2,0),
-    			
-    addtextlabel = TRUE, pos.text = c("sides","diag"), col.text = "red",
-    			
-    shade.method = c("negtive", "positive", "all"),
-    lwd.shade = 1, col.shade = "white", 
-    			
-    			
-    addgrid = TRUE, col.grid = "gray", diag = TRUE,   
-    addnum = FALSE,  col.num = NULL, 
-    			
-    corr.mtest = FALSE, p.mat = NULL, conf.level = 0.95,
-    non_corr.method = c("pch","blank"),
-    pch = 4, col.pch = "red",  cex.pch = 1,
-    plotConf = FALSE, low.mat = NULL, upp.mat = NULL)
-		
-corrplot.circle(corr, ...)
-corrplot.ellipse(corr,...)
-corrplot.number(corr, ...)
-corrplot.pie(corr, ...)
-corrplot.shade(corr, ...)
-corrplot.square(corr, ...)
-corrplot.shade(corr, ...)
+		outline = FALSE, cex = 1, title = "", bg = "white",
+		addcolorkey = c("right", "bottom","no"), colorkey=c( "min2max","-1to1"),
+		colorkey.label_len=11, colorkey.cex =1, ckRatio = 0.15, mar = c(0,0,0,0),
+                        
+		addtextlabel = TRUE, pos.text = c("lt","ld","td","d"), 
+		col.text = "red", offset = 0.4, family.text = NULL,
+                        
+		shade.method = c("negtive", "positive", "all"),
+		lwd.shade = 1, col.shade = "white", 
+                        
+                        
+		addgrid = TRUE, col.grid = "gray", diag = TRUE,   
+		addnum = FALSE,  col.num = NULL, 
+                        
+		corr.mtest = FALSE, p.mat = NULL, conf.level = 0.95,
+		non_corr.method = c("pch","blank"),
+		pch = 4, col.pch = "red",  cex.pch = 1,
+		plotConf = FALSE, low.mat = NULL, upp.mat = NULL)
+
 corrplot.mtest(dat = NULL, corr = NULL, p.mat = NULL, conf.level = 0.95,
-	plotConf = FALSE, low.mat = NULL, upp.mat = NULL, 
-    non_corr.method = c("pch","blank"), method = c("circle","square"),
-    pch = 4, col.pch = "black",...)
+         plotConf = FALSE, low.mat = NULL, upp.mat = NULL, 
+         non_corr.method = c("pch","blank"), method = c("circle","square"),
+         pch = 4, col.pch = "black",...)
 }
 \arguments{
   \item{corr}{
@@ -124,14 +118,25 @@ the background color.
 }
 
   \item{addcolorkey}{
-whether add colorkey or not.
+where to draw colorkey, if \code{no}, don't draw colorkey.
 }
   \item{colorkey}{
 style of colorkey, must be \code{"-1to1"} or \code{"min2max"}.
 }
-  \item{cex.col.num}{
-cex of the number in colorkey. 
+
+
+\item{colorkey.label_len}{
+the number of number-text in colorkey, passed to \code{colorkey}.
 }
+
+\item{colorkey.cex}{
+cex of number-label in colorkey,  passed to \code{colorkey}. 
+}
+
+\item{ckRatio}{
+to justify the width of colorkey, 0.1\~0.2 is suggested. 
+}
+
   \item{mar}{
 see \code{\link{par}}.
 }
@@ -139,13 +144,21 @@ see \code{\link{par}}.
 logical, whether add text label or not.
 }
   \item{pos.text}{
-position of text labels, if \code{"sides"}, all the text labels will be plot on sides; if \code{"diag"} (only valid when \code{type} is \code{upper} or \code{lower}), a set of text labels will be plot near the principal diagonal.
+position of text labels, \code{"lt"} means left and top, \code{"ld"} means left and diagonal(near), \code{"td"} means top and diagonal(near), \code{"d"} means diag.
 }
   \item{col.text}{
 the color of text label.
 }
   \item{shade.method}{
 shade method, only valid when \code{method} is \code{shade}. If \code{negative}, then the negtive correlation will be shaded; if \code{positive}, then the positive correlation will be shaded; If \code{all}, then all correlation will be shaded. Note: the angle of shade line is different, 45 degrees for positive and 135 degrees for negtive.
+}
+
+  \item{offset}{
+for text label, see in \code{\link{text}}.
+}
+
+  \item{family.text}{
+for text label, see in \code{\link{text}}.
 }
   \item{lwd.shade}{
 the line width of shade.
@@ -206,8 +219,9 @@ original data.frame or matrix for function \code{corrplot.mtest},  \code{corrplo
 }
 
   \item{\dots}{
-extra parameters.
+additional arguments, passed to \code{corrplot}.  
 }
+
 }
 
 \value{
@@ -261,9 +275,12 @@ corrplot(corr, order="hclust", rect.hc = 2)
 corrplot(corr, order="hclust", rect.hc = 3, rect.col = "red")
 corrplot(corr, order="hclust", rect.hc = 4, rect.col = "yellow")
 
-
-corrplot(corr, order="hclust", hclust.method="ward", rect.hc = 3) ## same as:
-corrplot(corr, order="hclust", hclust.method="ward")
+col <- colorRampPalette(c("red", "white", "blue"))
+jet.colors <-
+  colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
+                     "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+corrplot(corr, order="hclust", hclust.method="ward", rect.hc = 3, col=col(100))
+corrplot(corr, order="hclust", hclust.method="ward", col=jet.colors(100))
 corr.rect(c(5,2,4))
 
 corrplot.shade(corr, order="PCA", shade.method = "negtive", col.grid="white")

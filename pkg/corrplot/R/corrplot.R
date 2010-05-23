@@ -17,8 +17,7 @@
 #' @param lwd.shade,
 #' @param col.shade,
 #' @param ... extra parameters, currenlty ignored
-#  last modified by Taiyun 2009-8-27 0:20:11
-#  last modified by Taiyun 2010-5-11 0:20:11
+#  last modified by Taiyun 2010-5-23 0:20:11
 corrplot <- function(corr, method = c("circle", "square", "ellipse", "number", 
                                 "pie", "shade", "color"),
 		type = c("full", "lower", "upper"), 
@@ -32,10 +31,11 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
 				"#4393C3", "#2166AC", "#053061"))(200),
              
 		outline = FALSE, cex = 1, title = "", bg = "white",
-		addcolorkey = TRUE, colorkey=c("min2max", "-1to1"),
-		cex.col.num = 0.8, mar = c(0,0,2,0),
+		addcolorkey = c("right", "bottom","no"), colorkey=c( "min2max","-1to1"),
+		colorkey.label_len=11, colorkey.cex =1, ckRatio = 0.15, mar = c(0,0,0,0),
                         
-		addtextlabel = TRUE, pos.text = c("sides","diag"), col.text = "red",
+		addtextlabel = TRUE, pos.text = c("lt","ld","td","d"), 
+		col.text = "red", offset = 0.4, family.text = NULL,
                         
 		shade.method = c("negtive", "positive", "all"),
 		lwd.shade = 1, col.shade = "white", 
@@ -107,11 +107,11 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
       if(nc==1)
           syms_bg <- rep(col, nm)
       else{
-          ff <- seq(-1,1, length=nc+1)
+          ff <- seq(-1,1, length=nc+1) 
           bg2 = rep(0, nm)
            for (i in 1:(nm)){
               bg2[i] <- rank(c(ff[2:nc], corrVector[i]), 
-                              ties.method = "random")[nc]
+                              ties.method = "first")[nc]
           }
           syms_bg <- col[bg2]
       }
@@ -161,21 +161,30 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     ylabwidth <- max(strwidth(mycolnames, cex = cex))
     S1 <- nn*mm   
 	
-	if(!addtextlabel) xlabwidth <- xlabwidth <- 0
+	pos.text <- match.arg(pos.text)  
+	if(!addtextlabel|pos.text=="d") xlabwidth <- xlabwidth <- 0
     ## set up an empty plot with the appropriate dimensions
-    if(!addcolorkey){
+	
+	addcolorkey <- match.arg(addcolorkey)
+	colorkey <- match.arg(colorkey)
+    if(addcolorkey=="no"){
       plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5), 
                   c(n1 - 0.5, n2 + 0.5 + ylabwidth),
                 asp = 1, xlab="", ylab="")
       S2 <- (mm + xlabwidth)*(mm + ylabwidth)##area of figure
     }
-    if(addcolorkey){
-      plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5 + mm*0.15), 
+    if(addcolorkey=="right"){
+      plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5 + mm*ckRatio), 
                   c(n1 - 0.5, n2 + 0.5 + ylabwidth),
                   asp = 1, xlab="", ylab="")
-      S2 <- (mm + xlabwidth+ mm*0.15)*(nn + ylabwidth)
+      S2 <- (mm + xlabwidth+ mm*ckRatio)*(nn + ylabwidth)
     }
-    
+    if(addcolorkey=="bottom"){
+      plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5), 
+                  c(n1 - 0.5 - nn*ckRatio, n2 + 0.5 + ylabwidth),
+                  asp = 1, xlab="", ylab="")
+      S2 <- (mm + xlabwidth+ mm*ckRatio)*(nn + ylabwidth)
+    }    
     ## background color
     symbols(mypos, add = TRUE, inches = FALSE, 
             squares = rep(1, len.mycorr), bg = bg, fg = bg)
@@ -274,58 +283,53 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     }
 	
        
-    if(addcolorkey){
-    	min.corr <- round(min(corr, na.rm = TRUE),2)
-    	tmp <- corr
-    	diag(tmp) <- NA
-    	max.corr <- round(max(tmp , na.rm = TRUE),2)
-    	colorkey <- match.arg(colorkey)
-    	if(colorkey == "-1to1")   	
-    	    xx <- seq(-1,1,0.01)
-    	if(colorkey == "min2max")
-    	    xx <- seq(min.corr, max.corr, 0.01)
-    	xxx <- (n2 - n1 + 1) * (xx - min(xx))/(max(xx)-min(xx)) + 0.5 + n1 - 1 
-    	xx.color <- assign.color(col, xx)
-    	len.xx <- length(xx)
-    	rect(rep(m2 + 0.5 + 0.2*0.15*mm, len.xx-1), xxx[-len.xx], 
-    	     rep(m2 + 0.5 + 0.45*0.15*mm, len.xx-1), xxx[-1], col = xx.color, 
-    	     border = xx.color)
-    	rect(m2 + 0.5 + 0.2*0.15*mm, n1 - 0.5, 
-    	     m2 + 0.5 + 0.45*0.15*mm, n2 + 0.5, border = "black")
-    	
-    	###
-    	corr.label <- round(seq(min(xx), max(xx), length = 11), 2)
-    	colstrwidth <- max(strwidth(corr.label,  cex = cex.col.num))
-    	pos.ylabel <- (n2 - n1 + 1) * (corr.label - min(xx))/(max(xx)-min(xx)) + 0.5 + n1 - 1
-    	#pos.xlabel <- rep(1.15*m + 0.5 - 0.55*colstrwidth, length(pos.ylabel))    	
-    	pos.xlabel <- rep(m2 + 0.5 + 0.15*mm-colstrwidth/2, length(pos.ylabel))
-    	text(pos.xlabel, pos.ylabel, corr.label, cex = cex.col.num)
-    	segments(m2 + 0.5 + 0.45*0.15*mm,     pos.ylabel,
-    	         m2+ 0.5 + 0.45*0.15*mm*1.2, pos.ylabel)
-    }
+    if(addcolorkey!="no"){
+		##Max <- ifelse(diag==TRUE, 1, Max=max(mycorr))
+		if(colorkey=="min2max") corrVec <- seq(min(mycorr), max(mycorr), length=200)
+		if(colorkey=="-1to1") corrVec <- seq(-1, 1, length=200)
+		labelcolor <- assign.color(col, corrVec)
+		num_col <- data.frame(corrVec, labelcolor)
+		if(addcolorkey=="right"){
+			vertical <- TRUE
+			xlim <- c(m2 + 0.5 + mm*0.02, m2 + 0.5 + mm*ckRatio)
+			ylim <- c(n1-0.5, n2+0.5)
+		}
+		
+		if(addcolorkey=="bottom"){
+			vertical <- FALSE
+			xlim <- c(m1-0.5, m2+0.5)
+			ylim <- c(n1 - 0.5 - nn*ckRatio, n1 - 0.5- nn*0.02)
+		}
+		colorkey(num_col=num_col, xlim=xlim, ylim=ylim, vertical=vertical, 
+				label_len=colorkey.label_len, cex=colorkey.cex, col.text="black")
+	}
     
     ## add variable names and title
-    if(addtextlabel){
-        pos.text <- match.arg(pos.text)  	  
+    if(addtextlabel){	  
         cex2 <- cex * S1/S2
         ylabwidth2 <- strwidth(myrownames, cex = cex2)
         xlabwidth2 <- strwidth(mycolnames, cex = cex2) 
         
-        pos.xlabel <- cbind(m1:m2, n2 + 0.7 + xlabwidth2/2)
-        pos.ylabel <- cbind(m1 - 0.7 - ylabwidth2/2, n2:n1)
+        pos.xlabel <- cbind(m1:m2, n2 + 0.5 + xlabwidth2/2)
+        pos.ylabel <- cbind(m1 - 0.5, n2:n1)
         
-        if(pos.text=="diag"){
-           if(type=="full")
-              warning("type==\"full\", pos.text=\"diag\" is omited")  
-           if(type=="upper")
-             	pos.ylabel <- cbind(m1:(m1+nn)-0.7-ylabwidth2/2, n2:n1)     	
-           if(type=="lower")
-             	pos.xlabel <- cbind(m1:m2, n2:(n2-mm) + 0.7 + xlabwidth2/2)
-        }
-        text(pos.xlabel[,1], pos.xlabel[,2], mycolnames, srt = 90,
-                 col = col.text, cex = cex * S1/S2)
-        text(pos.ylabel[,1], pos.ylabel[,2], myrownames, 
-                 col = col.text, cex = cex * S1/S2)
+
+        if(pos.text=="td")
+            pos.ylabel <- cbind(m1:(m1+nn)-0.5, n2:n1)     	
+        if(pos.text=="ld")
+            pos.xlabel <- cbind(m1:m2, n2:(n2-mm) + 0.5 + xlabwidth2/2)
+        if(pos.text=="d"){
+			if(type!="full") stop("type should be \"full\" if pos.text is \"d\"")
+			pos.ylabel <- cbind(m1:(m1+nn)-0.5, n2:n1)
+			pos.ylabel <- pos.ylabel[1:min(n,m),]
+			text(pos.ylabel[,1]+0.5, pos.ylabel[,2], mycolnames[1:min(n,m)],
+                 col = col.text, cex = cex * S1/S2, family=family.text)
+		} else {
+			text(pos.xlabel[,1], pos.xlabel[,2], mycolnames, srt = 90, family=family.text,
+                 col = col.text, cex = cex * S1/S2, pos=3, offset=offset)
+			text(pos.ylabel[,1], pos.ylabel[,2], myrownames, family=family.text,
+                 col = col.text, cex = cex * S1/S2, pos=2, offset=offset)
+		}
     }
     
     title(title)
@@ -392,7 +396,7 @@ corrplot <- function(corr, method = c("circle", "square", "ellipse", "number",
     	  symbols(mypos, add=TRUE, inches = FALSE,  bg = NA,
     	     squares = rep(1, len.mycorr), fg = col.grid)
     }
-	
+	if(type=="full") rect(m1-0.5, n1-0.5, m2+0.5, n2+0.5, border=col.grid)
 	##  draws rectangles 
 	if(!is.na(rect.hc)){
 		tree <- hclust(as.dist(1-corr), method = hclust.method)
