@@ -23,7 +23,7 @@ corrplot <- function(corr,
 		addshade = c("negtive", "positive", "all"),
 		shade.lwd = 1, shade.col = "white",
 
-		p.mat = NULL, evi.level = 0.05,
+		p.mat = NULL, sig.level = 0.05,
 		insig = c("pch","blank", "no"),
 		pch = 4, pch.col = "black", pch.cex = 3,
 		
@@ -241,6 +241,90 @@ corrplot <- function(corr,
 			squares = rep(1, len.mycorr), bg = col.fill, fg = col.border)
     }
 
+	plotConf <- match.arg(plotConf)
+	if(plotConf!="no"){
+		if(is.null(lowconf.mat)||is.null(uppconf.mat))
+			stop("Need lowconf.mat and uppconf.mat!")
+		if(!order=="original"){
+			lowconf.mat <- lowconf.mat[ord,ord]
+			uppconf.mat <- uppconf.mat[ord,ord]
+		}
+		pos.lowNew  <- getMy.dat(lowconf.mat)[[1]]
+		lowNew      <- getMy.dat(lowconf.mat)[[2]]
+		pos.uppNew  <- getMy.dat(uppconf.mat)[[1]]
+		uppNew      <- getMy.dat(uppconf.mat)[[2]]
+		if(!(method=="circle"||method=="square"))
+			stop("method shoud be circle or square if draw confidence interval!")
+		k1 <- (abs(uppNew) > abs(lowNew))
+		bigabs <- uppNew 
+		bigabs[which(!k1)] <- lowNew[!k1]
+		smallabs <- lowNew
+		smallabs[which(!k1)] <- uppNew[!k1]
+		sig <- sign(uppNew * lowNew)
+		
+		if(plotConf=="circle"){	
+			symbols(pos.uppNew[,1], pos.uppNew[,2],
+				add = TRUE,  inches = FALSE,
+				circles = 0.95*abs(bigabs)**0.5/2,  
+				bg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]),
+				fg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]))
+			symbols(pos.lowNew[,1], pos.lowNew[,2],
+				add = TRUE, inches = FALSE, 
+				circles = 0.95*abs(smallabs)**0.5/2, 
+				bg = ifelse(sig>0, bg, col[ceiling((smallabs+1)*length(col)/2)]),
+				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
+		}
+		
+		if(plotConf=="square"){
+			symbols(pos.uppNew[,1], pos.uppNew[,2],
+				add = TRUE,  inches = FALSE,
+				squares = abs(bigabs)**0.5,  
+				bg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]),
+				fg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]))
+			symbols(pos.lowNew[,1], pos.lowNew[,2],
+				add = TRUE, inches = FALSE, 
+				squares = abs(smallabs)**0.5, 
+				bg = ifelse(sig>0, bg, col[ceiling((smallabs+1)*length(col)/2)]),
+				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
+		}
+
+		if(plotConf=="rect"){	
+			rect(pos.uppNew[,1]-0.34, pos.uppNew[,2]+smallabs/2,
+				pos.uppNew[,1] +0.34, pos.uppNew[,2]+bigabs/2,
+				col=col.fill, border=col.fill)
+			segments(pos.lowNew[,1]-0.34, pos.lowNew[,2]+mycorr/2,
+				pos.lowNew[,1]+0.34, pos.lowNew[,2]+mycorr/2,
+				col="black",lwd=1)	
+			segments(pos.uppNew[,1]-0.34, pos.uppNew[,2]+uppNew/2,
+				pos.uppNew[,1]+0.34, pos.uppNew[,2]+uppNew/2,
+				col="black",lwd=1)
+			segments(pos.lowNew[,1]-0.34, pos.lowNew[,2]+lowNew/2,
+				pos.lowNew[,1]+0.34, pos.lowNew[,2]+lowNew/2,
+				col="black",lwd=1)
+			segments(pos.lowNew[,1]-0.5,pos.lowNew[,2], 
+				pos.lowNew[,1]+0.5, pos.lowNew[,2],col = "grey70", lty=3)
+		}
+
+	}
+	
+	insig <- match.arg(insig)
+    if(!is.null(p.mat)&!insig=="no"){
+    	if(!order=="original")
+    	p.mat <- p.mat[ord, ord]
+		pos.pNew  <- getMy.dat(p.mat)[[1]]
+    	pNew      <- getMy.dat(p.mat)[[2]]
+    	
+		ind.p <- which(pNew > (sig.level))
+    	if(insig=="pch"){
+			points(pos.pNew[,1][ind.p], pos.pNew[,2][ind.p],
+				pch = pch, col = pch.col, cex = pch.cex, lwd=2)
+		}
+		if(insig=="blank"){
+			symbols(pos.pNew[,1][ind.p], pos.pNew[,2][ind.p], inches = FALSE,
+				squares = rep(1, length(pos.pNew[,1][ind.p])),
+				fg = NA, bg = bg, add = TRUE)
+		}
+	}
 
     if(addcolorlabel!="no"){
 		if(cl.range=="min2max"){
@@ -314,93 +398,6 @@ corrplot <- function(corr,
     }
 
     title(title)
-	
-
-	plotConf <- match.arg(plotConf)
-	if(plotConf!="no"){
-		if(is.null(lowconf.mat)||is.null(uppconf.mat))
-			stop("Need lowconf.mat and uppconf.mat!")
-		if(!order=="original"){
-			lowconf.mat <- lowconf.mat[ord,ord]
-			uppconf.mat <- uppconf.mat[ord,ord]
-		}
-		pos.lowNew  <- getMy.dat(lowconf.mat)[[1]]
-		lowNew      <- getMy.dat(lowconf.mat)[[2]]
-		pos.uppNew  <- getMy.dat(uppconf.mat)[[1]]
-		uppNew      <- getMy.dat(uppconf.mat)[[2]]
-		if(!(method=="circle"||method=="square"))
-			stop("method shoud be circle or square if draw confidence interval!")
-		k1 <- (abs(uppNew) > abs(lowNew))
-		bigabs <- uppNew 
-		bigabs[which(!k1)] <- lowNew[!k1]
-		smallabs <- lowNew
-		smallabs[which(!k1)] <- uppNew[!k1]
-		sig <- sign(uppNew * lowNew)
-		
-		if(plotConf=="circle"){	
-			symbols(pos.uppNew[,1], pos.uppNew[,2],
-				add = TRUE,  inches = FALSE,
-				circles = 0.95*abs(bigabs)**0.5/2,  
-				bg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]),
-				fg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]))
-			symbols(pos.lowNew[,1], pos.lowNew[,2],
-				add = TRUE, inches = FALSE, 
-				circles = 0.95*abs(smallabs)**0.5/2, 
-				bg = ifelse(sig>0, bg, col[ceiling((smallabs+1)*length(col)/2)]),
-				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
-		}
-		
-		if(plotConf=="square"){
-			symbols(pos.uppNew[,1], pos.uppNew[,2],
-				add = TRUE,  inches = FALSE,
-				squares = abs(bigabs)**0.5,  
-				bg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]),
-				fg = ifelse(sig>0, col.fill, col[ceiling((bigabs+1)*length(col)/2)]))
-			symbols(pos.lowNew[,1], pos.lowNew[,2],
-				add = TRUE, inches = FALSE, 
-				squares = abs(smallabs)**0.5, 
-				bg = ifelse(sig>0, bg, col[ceiling((smallabs+1)*length(col)/2)]),
-				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
-		}
-
-		if(plotConf=="rect"){	
-			rect(pos.uppNew[,1]-0.34, pos.uppNew[,2]+smallabs/2,
-				pos.uppNew[,1] +0.34, pos.uppNew[,2]+bigabs/2,
-				col=col.fill, border=col.fill)
-			segments(pos.lowNew[,1]-0.34, pos.lowNew[,2]+mycorr/2,
-				pos.lowNew[,1]+0.34, pos.lowNew[,2]+mycorr/2,
-				col="black",lwd=2)	
-			segments(pos.uppNew[,1]-0.34, pos.uppNew[,2]+uppNew/2,
-				pos.uppNew[,1]+0.34, pos.uppNew[,2]+uppNew/2,
-				col="black",lwd=1.5)
-			segments(pos.lowNew[,1]-0.34, pos.lowNew[,2]+lowNew/2,
-				pos.lowNew[,1]+0.34, pos.lowNew[,2]+lowNew/2,
-				col="black",lwd=1.5)
-			segments(pos.lowNew[,1]-0.5,pos.lowNew[,2], 
-				pos.lowNew[,1]+0.5, pos.lowNew[,2],col = "grey70", lty=3)
-		}
-
-	}
-	
-	insig <- match.arg(insig)
-    if(!is.null(p.mat)&!insig=="no"){
-    	if(!order=="original")
-    	p.mat <- p.mat[ord, ord]
-		pos.pNew  <- getMy.dat(p.mat)[[1]]
-    	pNew      <- getMy.dat(p.mat)[[2]]
-    	
-		ind.p <- which(pNew > (evi.level))
-    	if(insig=="pch"){
-			points(pos.pNew[,1][ind.p], pos.pNew[,2][ind.p],
-				pch = pch, col = pch.col, cex = pch.cex, lwd=2)
-		}
-		if(insig=="blank"){
-			symbols(pos.pNew[,1][ind.p], pos.pNew[,2][ind.p], inches = FALSE,
-				squares = rep(1, length(pos.pNew[,1][ind.p])),
-				fg = NA, bg = bg, add = TRUE)
-		}
-	}
-
 	## add grid
     if(!is.null(addgrid.col)){
     	symbols(mypos, add=TRUE, inches = FALSE,  bg = NA,

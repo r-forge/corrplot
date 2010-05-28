@@ -44,7 +44,7 @@ corrplot(corr,
 		addshade = c("negtive", "positive", "all"),
 		shade.lwd = 1, shade.col = "white",
 
-		p.mat = NULL, evi.level = 0.05,
+		p.mat = NULL, sig.level = 0.05,
 		insig = c("pch","blank", "no"),
 		pch = 4, pch.col = "black", pch.cex = 3,
 
@@ -215,17 +215,17 @@ the color of shade line.
 
 
   \item{p.mat}{
-matrix of p-value, if \code{NULL}, arguments \code{evi.level}, \code{insig}, 
+matrix of p-value, if \code{NULL}, arguments \code{sig.level}, \code{insig}, 
 \code{pch}, \code{pch.col}, \code{pch.cex} is invalid.
 }
 
-  \item{evi.level}{
-evidence level,  if the p-value in \code{p-mat} is bigger than \code{evi.level}, then
+  \item{sig.level}{
+significant level,  if the p-value in \code{p-mat} is bigger than \code{sig.level}, then
 the corresponding correlation is regarded as insignificant.
 }
 
   \item{insig}{
-the method to deal with the insignificant correlation, if \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, add characters(see \code{pch} for details) on the
+specialized insignificant correlation, if \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, add characters(see \code{pch} for details) on the
 corresponding glyphs; if \code{"no"}, don't take any measures.
 }
   \item{pch}{
@@ -307,7 +307,7 @@ data(mtcars)
 corr <- cor(mtcars)
 par(ask = TRUE)
 
-##
+## different methods to display corr-matrix
 corrplot(corr, method="number", col="black", addcolorlabel="no")
 corrplot(corr, method="number")
 corrplot(corr)
@@ -321,7 +321,7 @@ corrplot(corr, method="pie", order = "PCA")
 
 
 
-## order is hclust and draw rectangles on graph
+## order is hclust and draw rectangles
 corrplot(corr, order="hclust", addrect = 2)
 corrplot(corr, order="hclust", addrect = 3, rect.col = "red")
 corrplot(corr, order="hclust", addrect = 4, rect.col = "blue")
@@ -329,7 +329,7 @@ corrplot(corr, order="hclust", hclust.method="ward", addrect = 4)
 
 
 
-## about text-labels and type
+## text-labels and plot type
 corrplot(corr, order="PCA", addtextlabel="d")
 corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d")
 corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d",cl.range="min2max")
@@ -340,7 +340,7 @@ corrplot(corr, order="PCA", type="lower", addcolorlabel="b", diag=FALSE, addtext
 
 
 
-#### about color-legend, corr-color, and background-color
+#### color-legend, corr-color, and background-color
 corrplot(corr, order="PCA", cl.ratio=0.1, cl.align="r", cl.offset=0)
 corrplot(corr, order="PCA", cl.ratio=0.15,cl.length=9)
 corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="l")
@@ -396,38 +396,46 @@ cor.mtest <- function(mat, conf.level = 0.95){
 	return(list(p.mat, lowconf.mat, uppconf.mat))
 }
 
-res <- cor.mtest(mtcars,0.99)
+res1 <- cor.mtest(mtcars,0.95)
+res2 <- cor.mtest(mtcars,0.99)
 
-##
-corrplot(corr, p.mat = res[[1]], evi.level=0.2)
-corrplot(corr, p.mat = res[[1]], evi.level=0.05)
-corrplot(corr, p.mat = res[[1]], evi.level=0.01)
-corrplot(corr, p.mat = res[[1]], insig = "blank")
-corrplot(corr, p.mat = res[[1]], order="hclust", insig = "blank", addrect=3)
-corrplot(corr, p.mat = res[[1]], order="hclust", insig = "pch", addrect=3)
 
-##
-corrplot(corr,low=res[[2]], upp=res[[3]],
+## specialized the insignificant value according to the significant level
+corrplot(corr, p.mat = res1[[1]], sig.level=0.2)
+corrplot(corr, p.mat = res1[[1]], sig.level=0.05)
+corrplot(corr, p.mat = res1[[1]], sig.level=0.01)
+corrplot(corr, p.mat = res1[[1]], insig = "blank")
+corrplot(corr, p.mat = res1[[1]], order="hclust", insig = "blank", addrect=3)
+corrplot(corr, p.mat = res1[[1]], order="hclust", insig = "pch", addrect=3)
+
+
+
+## plot confidence interval(0.95), "square" method	
+corrplot(corr,low=res1[[2]], upp=res1[[3]],
 	plotC="circle", addg="grey20",addc="no")
-corrplot(corr, p.mat = res[[1]],low=res[[2]], upp=res[[3]],
+corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
 	plotC="circle", addg="grey20",addc="no")
-	
-corrplot(corr, low=res[[2]], upp=res[[3]], 
+corrplot(corr, low=res1[[2]], upp=res1[[3]], 
 	col=c("white","black"),bg="gold2",
 	plotConf="circle",addc="no",pch.col="red")
-corrplot(corr, p.mat = res[[1]], low=res[[2]], upp=res[[3]], 
+corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], 
 	col=c("white","black"),bg="gold2",
 	plotConf="circle",addc="no",pch.col="red")
-	
-corrplot(corr, low=res[[2]], upp=res[[3]],
+## plot confidence interval(0.95), "square" method	
+corrplot(corr, low=res1[[2]], upp=res1[[3]],
 	plotConf="square",addg="grey20",addc="no",pch.col=1)
-corrplot(corr, p.mat = res[[1]],low=res[[2]], upp=res[[3]],
+corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
 	plotC="square", addg="grey20",addc="no")
-
-corrplot(corr, low=res[[2]], upp=res[[3]],
-	plotConf="rect", order="PCA",addg="grey20",addc="no")
-corrplot(corr, p.mat = res[[1]],low=res[[2]], upp=res[[3]], pch.col="red",
-	plotC="rect", order="PCA",addg="grey20",addc="no")
+## plot confidence interval(0.95, 0.95, 0.99), "rect" method
+corrplot(corr, low=res1[[2]], upp=res1[[3]], order="hclust",
+	addrect=3, rect.col="navy",
+	plotC="rect", addg="grey20",addc="no")
+corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], order="hclust",
+	pch.col="red", sig.level = 0.05, addrect=3, rect.col="navy",
+	plotC="rect",addg="grey20",addc="no")
+corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
+	pch.col="red", sig.level = 0.01, addrect=3, rect.col="navy",
+	plotC="rect", addg="grey20",addc="no")
 
 }
 }
