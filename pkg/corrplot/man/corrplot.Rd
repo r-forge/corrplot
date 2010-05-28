@@ -48,7 +48,7 @@ corrplot(corr,
 		insig = c("pch","blank", "no"),
 		pch = 4, pch.col = "black", pch.cex = 3,
 
-		plotConf = c("no","square", "circle", "rect"),
+		plotCI = c("no","square", "circle", "rect"),
 		lowconf.mat = NULL, uppconf.mat = NULL)
 corrplot.circle(corr, ...)
 corrplot.square(corr, ...)
@@ -242,9 +242,12 @@ the cex of pch (only valid when \code{insig} is \code{pch}).
 }
 
 
-  \item{plotConf}{
+  \item{plotCI}{
 method to plot confidence interval, if \code{"no"}, don't plot confidence interval; 
-if \code{"square"}, plot two square whose areas is ; if \code{"circle"}, ; if\code{"rect"},.
+if \code{"square"} or \code{"circle"}, plot two squares or circles whose areas are
+lower and upper bound of CI respectively; if \code{"rect"}, plot rects whose upper side
+means upper bound, lower side means low bound, and corrrlation values are also added on
+rects.
 }
   \item{lowconf.mat}{
 matrix of the lower bound of confidence interval.
@@ -417,25 +420,26 @@ corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
 	plotC="circle", addg="grey20",addc="no")
 corrplot(corr, low=res1[[2]], upp=res1[[3]], 
 	col=c("white","black"),bg="gold2",
-	plotConf="circle",addc="no",pch.col="red")
+	plotCI="circle",addc="no",pch.col="red")
 corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], 
 	col=c("white","black"),bg="gold2",
-	plotConf="circle",addc="no",pch.col="red")
+	plotCI="circle",addc="no",pch.col="red")
+	
 ## plot confidence interval(0.95), "square" method	
 corrplot(corr, low=res1[[2]], upp=res1[[3]],
-	plotConf="square",addg="grey20",addc="no",pch.col=1)
+	plotCI="square",addg=NULL,addc="no",pch.col=1)
 corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
-	plotC="square", addg="grey20",addc="no")
+	plotC="square", addg=NULL,addc="no")
+	
 ## plot confidence interval(0.95, 0.95, 0.99), "rect" method
 corrplot(corr, low=res1[[2]], upp=res1[[3]], order="hclust",
-	addrect=3, rect.col="navy",
-	plotC="rect", addg="grey20",addc="no")
+	rect.col="navy", plotC="rect",addc="no")
 corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], order="hclust",
 	pch.col="red", sig.level = 0.05, addrect=3, rect.col="navy",
-	plotC="rect",addg="grey20",addc="no")
+	plotC="rect",addc="no")
 corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
 	pch.col="red", sig.level = 0.01, addrect=3, rect.col="navy",
-	plotC="rect", addg="grey20",addc="no")
+	plotC="rect",addc="no")
 
 dev.off()
 
@@ -443,7 +447,7 @@ dev.off()
 for(i in seq(0.1, 0.001, -0.001)){
 	tmp <- cor.mtest(mtcars,1-i)
 	corrplot(corr, p.mat = tmp[[1]], low=tmp[[2]], upp=tmp[[3]], order="hclust",
-		pch.col="red", sig.level = i, plotC="rect",addg="grey20",addc="no",
+		pch.col="red", sig.level = i, plotC="rect",addc="no",
 		mar=c(0,0,1,0), 
 		title=substitute(alpha == x,list(x=format(i,digits=3,nsmall=3))))
 	Sys.sleep(0.005)

@@ -27,7 +27,7 @@ corrplot <- function(corr,
 		insig = c("pch","blank", "no"),
 		pch = 4, pch.col = "black", pch.cex = 3,
 		
-		plotConf = c("no","square", "circle", "rect"),
+		plotCI = c("no","square", "circle", "rect"),
 		lowconf.mat = NULL, uppconf.mat = NULL)
 {
 
@@ -85,7 +85,7 @@ corrplot <- function(corr,
 
     method <- match.arg(method)
     type <- match.arg(type)
-    plotConf <- match.arg(plotConf)
+    plotCI <- match.arg(plotCI)
 
     getMy.dat <- function(mat){
 		x <- matrix(1:n*m, n, m)
@@ -157,13 +157,13 @@ corrplot <- function(corr,
 	
 
     ## circle
-    if(method=="circle"&plotConf=="no"){
+    if(method=="circle"&plotCI=="no"){
     	symbols(mypos, add = TRUE,  inches = FALSE, bg = col.fill,
 			circles = 0.9*abs(mycorr)^0.5/2, fg = col.border)
     }
 
     ## ellipse
-    if(method=="ellipse"&plotConf=="no"){
+    if(method=="ellipse"&plotCI=="no"){
     	ell.dat <- function(rho, length = 99){
     		k <- seq(0, 2*pi, length=length)
     		x <- cos(k + acos(rho)/2)/2
@@ -177,12 +177,12 @@ corrplot <- function(corr,
     }
 
     ## number
-    if(method=="number"&plotConf=="no"){
+    if(method=="number"&plotCI=="no"){
 		text(mypos[,1], mypos[,2], font = 2, round(100 * mycorr), col = col.fill)
     }
 
     ## pie
-    if(method=="pie"&plotConf=="no"){
+    if(method=="pie"&plotCI=="no"){
     	symbols(mypos, add = TRUE, inches = FALSE, circles = rep(0.5, len.mycorr)*0.85)
 		pie.dat <- function(theta, length = 100){
 			k <- seq(pi/2, pi/2 - theta, length = 0.5*length*abs(theta)/pi)
@@ -199,7 +199,7 @@ corrplot <- function(corr,
     }
 
     ## shade
-    if(method=="shade"&plotConf=="no"){
+    if(method=="shade"&plotCI=="no"){
     	addshade <- match.arg(addshade)
     	symbols(mypos, add = TRUE, inches = FALSE, squares = rep(1, len.mycorr),
 				bg = col.fill, fg = addgrid.col)
@@ -230,19 +230,25 @@ corrplot <- function(corr,
     }
 
     ##square
-    if(method=="square"&plotConf=="no"){
+    if(method=="square"&plotCI=="no"){
 		symbols(mypos, add = TRUE, inches = FALSE,
 			squares = abs(mycorr)^0.5, bg = col.fill, fg = col.border)
     }
 
     ##  color
-    if(method=="color"&plotConf=="no"){
+    if(method=="color"&plotCI=="no"){
     	symbols(mypos, add = TRUE, inches = FALSE,
 			squares = rep(1, len.mycorr), bg = col.fill, fg = col.border)
     }
 
-	plotConf <- match.arg(plotConf)
-	if(plotConf!="no"){
+	## add grid
+    if(!is.null(addgrid.col)){
+    	symbols(mypos, add=TRUE, inches = FALSE,  bg = NA,
+			squares = rep(1, len.mycorr), fg = addgrid.col)
+    } 
+	
+	plotCI <- match.arg(plotCI)
+	if(plotCI!="no"){
 		if(is.null(lowconf.mat)||is.null(uppconf.mat))
 			stop("Need lowconf.mat and uppconf.mat!")
 		if(!order=="original"){
@@ -262,7 +268,7 @@ corrplot <- function(corr,
 		smallabs[which(!k1)] <- uppNew[!k1]
 		sig <- sign(uppNew * lowNew)
 		
-		if(plotConf=="circle"){	
+		if(plotCI=="circle"){	
 			symbols(pos.uppNew[,1], pos.uppNew[,2],
 				add = TRUE,  inches = FALSE,
 				circles = 0.95*abs(bigabs)**0.5/2,  
@@ -275,7 +281,7 @@ corrplot <- function(corr,
 				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
 		}
 		
-		if(plotConf=="square"){
+		if(plotCI=="square"){
 			symbols(pos.uppNew[,1], pos.uppNew[,2],
 				add = TRUE,  inches = FALSE,
 				squares = abs(bigabs)**0.5,  
@@ -288,7 +294,7 @@ corrplot <- function(corr,
 				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
 		}
 
-		if(plotConf=="rect"){	
+		if(plotCI=="rect"){	
 			rect(pos.uppNew[,1]-0.34, pos.uppNew[,2]+smallabs/2,
 				pos.uppNew[,1] +0.34, pos.uppNew[,2]+bigabs/2,
 				col=col.fill, border=col.fill)
@@ -322,7 +328,7 @@ corrplot <- function(corr,
 		if(insig=="blank"){
 			symbols(pos.pNew[,1][ind.p], pos.pNew[,2][ind.p], inches = FALSE,
 				squares = rep(1, length(pos.pNew[,1][ind.p])),
-				fg = NA, bg = bg, add = TRUE)
+				fg = addgrid.col, bg = bg, add = TRUE)
 		}
 	}
 
@@ -398,18 +404,13 @@ corrplot <- function(corr,
     }
 
     title(title)
-	## add grid
-    if(!is.null(addgrid.col)){
-    	symbols(mypos, add=TRUE, inches = FALSE,  bg = NA,
-			squares = rep(1, len.mycorr), fg = addgrid.col)
-    }    
-
+   
     ## add numbers
     if(!is.null(addnum.col)&(!method == "number")){
 		text(mypos[,1], mypos[,2], round(100 * mycorr), col = addnum.col)
     }
 
-	if(type=="full"&plotConf=="no"&!is.null(addgrid.col))
+	if(type=="full"&plotCI=="no"&!is.null(addgrid.col))
 		rect(m1-0.5, n1-0.5, m2+0.5, n2+0.5, border=addgrid.col)
 	##  draws rectangles
 	if(!is.null(addrect)&order=="hclust"&type=="full"){
