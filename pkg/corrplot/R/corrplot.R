@@ -415,7 +415,7 @@ corrplot <- function(corr,
 	if(type=="full"&plotConf=="no"&!is.null(addgrid.col))
 		rect(m1-0.5, n1-0.5, m2+0.5, n2+0.5, border=addgrid.col)
 	##  draws rectangles
-	if(!is.null(addrect)&method=="hclust"&type=="full"){
+	if(!is.null(addrect)&order=="hclust"&type=="full"){
 		tree <- hclust(as.dist(1-corr), method = hclust.method)
 		hc <- cutree(tree, k = addrect)
 		clustab <- table(hc)[unique(hc[tree$order])]
