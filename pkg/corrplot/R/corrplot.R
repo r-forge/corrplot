@@ -28,7 +28,7 @@ corrplot <- function(corr,
 		pch = 4, pch.col = "black", pch.cex = 3,
 		
 		plotCI = c("no","square", "circle", "rect"),
-		lowconf.mat = NULL, uppconf.mat = NULL)
+		lowCI.mat = NULL, uppCI.mat = NULL)
 {
 
     if(!is.matrix(corr) )
@@ -249,16 +249,16 @@ corrplot <- function(corr,
 	
 	plotCI <- match.arg(plotCI)
 	if(plotCI!="no"){
-		if(is.null(lowconf.mat)||is.null(uppconf.mat))
-			stop("Need lowconf.mat and uppconf.mat!")
+		if(is.null(lowCI.mat)||is.null(uppCI.mat))
+			stop("Need lowCI.mat and uppCI.mat!")
 		if(!order=="original"){
-			lowconf.mat <- lowconf.mat[ord,ord]
-			uppconf.mat <- uppconf.mat[ord,ord]
+			lowCI.mat <- lowCI.mat[ord,ord]
+			uppCI.mat <- uppCI.mat[ord,ord]
 		}
-		pos.lowNew  <- getMy.dat(lowconf.mat)[[1]]
-		lowNew      <- getMy.dat(lowconf.mat)[[2]]
-		pos.uppNew  <- getMy.dat(uppconf.mat)[[1]]
-		uppNew      <- getMy.dat(uppconf.mat)[[2]]
+		pos.lowNew  <- getMy.dat(lowCI.mat)[[1]]
+		lowNew      <- getMy.dat(lowCI.mat)[[2]]
+		pos.uppNew  <- getMy.dat(uppCI.mat)[[1]]
+		uppNew      <- getMy.dat(uppCI.mat)[[2]]
 		if(!(method=="circle"||method=="square"))
 			stop("method shoud be circle or square if draw confidence interval!")
 		k1 <- (abs(uppNew) > abs(lowNew))

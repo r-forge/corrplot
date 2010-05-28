@@ -49,7 +49,7 @@ corrplot(corr,
 		pch = 4, pch.col = "black", pch.cex = 3,
 
 		plotCI = c("no","square", "circle", "rect"),
-		lowconf.mat = NULL, uppconf.mat = NULL)
+		lowCI.mat = NULL, uppCI.mat = NULL)
 corrplot.circle(corr, ...)
 corrplot.square(corr, ...)
 corrplot.ellipse(corr,...)
@@ -249,10 +249,10 @@ lower and upper bound of CI respectively; if \code{"rect"}, plot rects whose upp
 means upper bound, lower side means low bound, and corrrlation values are also added on
 rects.
 }
-  \item{lowconf.mat}{
+  \item{lowCI.mat}{
 matrix of the lower bound of confidence interval.
 }
-  \item{uppconf.mat}{
+  \item{uppCI.mat}{
 matrix of the upper bound of confidence interval.
 
 
@@ -385,18 +385,18 @@ corrplot(corr[,1:8])
 cor.mtest <- function(mat, conf.level = 0.95){
 	mat <- as.matrix(mat)
 	n <- ncol(mat)
-	p.mat <- lowconf.mat <- uppconf.mat <- matrix(NA, n, n)
+	p.mat <- lowCI.mat <- uppCI.mat <- matrix(NA, n, n)
 	diag(p.mat) <- 0
-	diag(lowconf.mat) <- diag(uppconf.mat) <- 1
+	diag(lowCI.mat) <- diag(uppCI.mat) <- 1
 	for(i in 1:(n-1)){
 		for(j in (i+1):n){
 			tmp <- cor.test(mat[,i], mat[,j], conf.level = conf.level)
 			p.mat[i,j] <- p.mat[j,i] <- tmp$p.value
-			lowconf.mat[i,j] <- lowconf.mat[j,i] <- tmp$conf.int[1]
-			uppconf.mat[i,j] <- uppconf.mat[j,i] <- tmp$conf.int[2]
+			lowCI.mat[i,j] <- lowCI.mat[j,i] <- tmp$conf.int[1]
+			uppCI.mat[i,j] <- uppCI.mat[j,i] <- tmp$conf.int[2]
 		}
 	}
-	return(list(p.mat, lowconf.mat, uppconf.mat))
+	return(list(p.mat, lowCI.mat, uppCI.mat))
 }
 
 res1 <- cor.mtest(mtcars,0.95)
