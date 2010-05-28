@@ -3,7 +3,7 @@
 \alias{corr.rect}
 
 \title{
-Draw rectangle(s) around the corrrlation matrix graph.
+Draw rectangle(s) on the correlation matrix graph.
 }
 \description{
 Draw rectangle(s) around the chart of corrrlation matrix based on the number 
