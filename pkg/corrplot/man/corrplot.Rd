@@ -441,16 +441,16 @@ corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
 	pch.col="red", sig.level = 0.01, addrect=3, rect.col="navy",
 	plotC="rect",addc="no")
 
-dev.off()
 
-## an animation of changing confidence interval according to different significance level
+## an animation of changing confidence interval in different significance level
+par(ask=FALSE)
 for(i in seq(0.1, 0.001, -0.001)){
 	tmp <- cor.mtest(mtcars,1-i)
 	corrplot(corr, p.mat = tmp[[1]], low=tmp[[2]], upp=tmp[[3]], order="hclust",
 		pch.col="red", sig.level = i, plotC="rect",addc="no",
 		mar=c(0,0,1,0), 
 		title=substitute(alpha == x,list(x=format(i,digits=3,nsmall=3))))
-	Sys.sleep(0.005)
+	Sys.sleep(0.01)
 }
 
 

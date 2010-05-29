@@ -294,18 +294,19 @@ corrplot <- function(corr,
 				fg = ifelse(sig>0, col.fill, col[ceiling((smallabs+1)*length(col)/2)]))
 		}
 
-		if(plotCI=="rect"){	
-			rect(pos.uppNew[,1]-0.34, pos.uppNew[,2]+smallabs/2,
-				pos.uppNew[,1] +0.34, pos.uppNew[,2]+bigabs/2,
+		if(plotCI=="rect"){
+			rect.width <- 0.25
+			rect(pos.uppNew[,1]-rect.width, pos.uppNew[,2]+smallabs/2,
+				pos.uppNew[,1] +rect.width, pos.uppNew[,2]+bigabs/2,
 				col=col.fill, border=col.fill)
-			segments(pos.lowNew[,1]-0.34, pos.lowNew[,2]+mycorr/2,
-				pos.lowNew[,1]+0.34, pos.lowNew[,2]+mycorr/2,
+			segments(pos.lowNew[,1]-rect.width, pos.lowNew[,2]+mycorr/2,
+				pos.lowNew[,1]+rect.width, pos.lowNew[,2]+mycorr/2,
 				col="black",lwd=1)	
-			segments(pos.uppNew[,1]-0.34, pos.uppNew[,2]+uppNew/2,
-				pos.uppNew[,1]+0.34, pos.uppNew[,2]+uppNew/2,
+			segments(pos.uppNew[,1]-rect.width, pos.uppNew[,2]+uppNew/2,
+				pos.uppNew[,1]+rect.width, pos.uppNew[,2]+uppNew/2,
 				col="black",lwd=1)
-			segments(pos.lowNew[,1]-0.34, pos.lowNew[,2]+lowNew/2,
-				pos.lowNew[,1]+0.34, pos.lowNew[,2]+lowNew/2,
+			segments(pos.lowNew[,1]-rect.width, pos.lowNew[,2]+lowNew/2,
+				pos.lowNew[,1]+rect.width, pos.lowNew[,2]+lowNew/2,
 				col="black",lwd=1)
 			segments(pos.lowNew[,1]-0.5,pos.lowNew[,2], 
 				pos.lowNew[,1]+0.5, pos.lowNew[,2],col = "grey70", lty=3)
