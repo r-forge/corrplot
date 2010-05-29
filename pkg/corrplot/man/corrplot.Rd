@@ -63,18 +63,19 @@ corrplot.color(corr, ...)
 the correlation matrix, must be square if \code{order} is not \code{"original"} (default).
 }
   \item{method}{
-the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"}, \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. 
+character, the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"}, \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. 
 
 The areas of circles or squares show the absolute value of corresponding correlation. Method
 \code{"pie"} and \code{"shade"} came from Michael Friendly's job (with some adjustment 
-about the shade added on), and \code{"ellipse"} came from D.J. Murdoch and E.D. Chow's job, see in section references.
+about the shade added on), and \code{"ellipse"} came from D.J. Murdoch and E.D. Chow's job, see in section References.
 }
   \item{type}{
-plot "full" matrix or just "upper" or "lower" triangular part of it.
+character, \code{"full"}, \code{"upper"} or \code{"lower"}, display full matrix,
+lower triangular or upper triangular of it.
 }
 
   \item{col}{
-vector, the color of glyphs.
+vector, the color of glyphs, which is distributed uniformly from -1 to 1.
 }
 
   \item{bg}{
@@ -82,7 +83,7 @@ the background color.
 }
 
   \item{title}{
-title of the graph.
+character, title of the graph.
 }
 
 
@@ -111,7 +112,7 @@ col of numerical correlations, if \code{NULL}, don't add numerical correlations.
 }
 
   \item{order}{
-the ordering method of the correlation matrix.
+character, the ordering method of the correlation matrix.
 	\itemize{
 		\item \code{"original"} for orginal order.
 		\item \code{"alphabet"} for alphabetical order.
@@ -121,7 +122,7 @@ the ordering method of the correlation matrix.
 }
 
   \item{hclust.method}{
-the agglomeration method to be used when \code{order} is \code{\link{hclust}}. This should be one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
+character, the agglomeration method to be used when \code{order} is \code{\link{hclust}}. This should be one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
 
 }
 
@@ -137,7 +138,7 @@ color for rectangle border(s), only valid when \code{addrect} is not \code{NULL}
 
 
   \item{rect.lwd}{
-line width for borders for rectangle border(s), only valid
+numeric, line width for borders for rectangle border(s), only valid
 when \code{addrect} is not \code{NULL}.
 
 
@@ -146,7 +147,9 @@ when \code{addrect} is not \code{NULL}.
 
 
   \item{addtextlabel}{
-position of text labels, \code{"lt"} means left and top, \code{"ld"} means left and diagonal(near), \code{"td"} means top and diagonal(near), \code{"d"} means diag. If \code{"no"},
+character, \code{"lt"}, \code{"ld"}, \code{"td"}, or \code{"d"}, giving position of 
+text labels, \code{"lt"} means left and top, \code{"ld"} means left and diagonal(near), 
+\code{"td"} means top and diagonal(near), \code{"d"} means diagonal. If \code{"no"},
 do not add textlabel.
 }
 
@@ -159,7 +162,7 @@ the color of text label.
 }
 
   \item{tl.offset}{
-for text label, see \code{\link{text}}.
+numeric, for text label, see \code{\link{text}}.
 
 
 }
@@ -167,15 +170,15 @@ for text label, see \code{\link{text}}.
 
 
   \item{addcolorlabel}{
-where to draw colorlabel, \code{"right"} for right and \code{"bottom"} for bottom.
+character, \code{"right"}, \code{"bottom"} or \code{"no"}, where to draw colorlabel. 
 If \code{"no"}, don't draw colorlabel.
 }
   \item{cl.range}{
-style of colorlabel, must be \code{"-1to1"} or \code{"min2max"}.
+character, \code{"-1to1"} or \code{"min2max"}, style of colorlabel.
 }
 
 \item{cl.length}{
-the number of number-text in colorlabel, passed to \code{\link{colorlegend}}.
+integer, the number of number-text in colorlabel, passed to \code{\link{colorlegend}}.
 }
 
 \item{cl.cex}{
@@ -183,16 +186,16 @@ cex of number-label in colorlabel,  passed to \code{\link{colorlegend}}.
 }
 
 \item{cl.ratio}{
-to justify the width of colorlabel, 0.1~0.2 is suggested.
+numeric, to justify the width of colorlabel, 0.1~0.2 is suggested.
 }
 
 \item{cl.align.text}{
-for number-label in colorlabel, \code{"l"} means left, \code{"c"} means center,
-and \code{"r"} means right.
+character, \code{"l"}, \code{"c"} or \code{"r"}, for number-label in colorlabel, 
+\code{"l"} means left, \code{"c"} means center, and \code{"r"} means right.
 }
 
 \item{cl.offset}{
-for number-label in colorlabel, see \code{\link{text}}.
+numeric, for number-label in colorlabel, see \code{\link{text}}.
 
 
 }
@@ -200,11 +203,13 @@ for number-label in colorlabel, see \code{\link{text}}.
 
 
   \item{addshade}{
-shade method, only valid when \code{method} is \code{shade}. If \code{"negative"}, then the negtive correlation will be shaded; if \code{"positive"}, then the positive correlation will be shaded; If \code{"all"}, then all correlation will be shaded. Note: the angle of shade line is different, 45 degrees for positive and 135 degrees for negtive.
+character for shade style, \code{"negative"}, \code{"positive"} or \code{"all"}, 
+only valid when \code{method} is \code{shade}. If \code{"negative"}, only the negative
+correlation will be shaded; if \code{"positive"}, only the positive correlation will be shaded; if \code{"all"}, then all correlation will be shaded. Note: the angle of shade line is different, 45 degrees for positive and 135 degrees for negative.
 }
 
   \item{shade.lwd}{
-the line width of shade.
+numeric, the line width of shade.
 }
   \item{shade.col}{
 the color of shade line.
@@ -225,12 +230,13 @@ the corresponding correlation is regarded as insignificant.
 }
 
   \item{insig}{
-specialized insignificant correlation, if \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, add characters(see \code{pch} for details) on the
+character, specialized insignificant correlation, if \code{"blank"}, wipe away the
+ corresponding glyphs; if \code{"pch"}, add characters(see \code{pch} for details) on 
 corresponding glyphs; if \code{"no"}, don't take any measures.
 }
   \item{pch}{
-add character on the glyphs of insignificant correlation 
-(only valid when \code{insig} is \code{pch}).
+add character on the glyphs of insignificant correlation (only valid when 
+\code{insig} is \code{pch}). See \code{\link{par}}.
 }
   \item{pch.col}{
 the color of pch (only valid when \code{insig} is \code{pch}).
@@ -243,7 +249,7 @@ the cex of pch (only valid when \code{insig} is \code{pch}).
 
 
   \item{plotCI}{
-method to plot confidence interval, if \code{"no"}, don't plot confidence interval; 
+character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval; 
 if \code{"square"} or \code{"circle"}, plot two squares or circles whose areas are
 lower and upper bound of CI respectively; if \code{"rect"}, plot rects whose upper side
 means upper bound, lower side means low bound, and corrrlation values are also added on

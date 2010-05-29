@@ -21,13 +21,12 @@ vector, col.
 
 
   \item{labels}{
-vector, numeric or character to specify the text to be written.
+vector, numeric or character to be written.
 }
 
 
   \item{at}{
-numeric vector, in [-1,1], where to put labels. Default value is writting labels aside
-colorbar ly.
+numeric vector (quantile), giving where to put labels.
 }
   \item{xlim}{
 see in \code{\link{plot}}.  
@@ -37,24 +36,27 @@ see in \code{\link{plot}}.
 }
 
   \item{vertical}{
-logical scalar, whether the colorlegend is vertical or horizon.  
+logical, whether the colorlegend is vertical or horizon.  
 }
 
 
   \item{ratio.colbar}{
-the width ratio of colorbar to colorlegend.  
+the width ratio of colorbar to the total colorlegend (including colorbar, 
+segments and labels).  
 }
 
   \item{lim.segment}{
-the width ratio of segments to colorlegend. 
+vector (quantile) of length 2, the elements should be in [-1,1], 
+giving segments coordinates ranges. 
 }
 
   \item{align}{
-the width ratio of segments to colorlegend. 
+character, alignment type of labels, \code{"l"} means left, \code{"c"} means center 
+and \code{"r"} right. 
 }
 
   \item{addlabels}{
-logical, whether add text label.
+logical, whether add text label or not.
 }
 
   \item{\dots}{
