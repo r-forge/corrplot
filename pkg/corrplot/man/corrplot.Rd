@@ -67,8 +67,7 @@ the correlation matrix, must be square if \code{order} is not \code{"original"}.
   \item{method}{
 character, the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"} (default), \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. 
 
-The areas of circles or squares show the absolute value of corresponding correlation. Method
-\code{"pie"} and \code{"shade"} came from Michael Friendly's job (with some adjustment 
+The areas of circles or squares show the absolute value of corresponding correlation coefficients. Method \code{"pie"} and \code{"shade"} came from Michael Friendly's job (with some adjustment 
 about the shade added on), and \code{"ellipse"} came from D.J. Murdoch and E.D. Chow's job, see in section References.
 }
   \item{type}{
@@ -77,7 +76,7 @@ lower triangular or upper triangular of it.
 }
 
   \item{col}{
-vector, the color of glyphs for correlation or confidence level, 
+vector, the color of glyphs for correlation coefficients or confidence interval's bounds, 
 and it is distributed uniformly from -1 to 1. 
 }
 
@@ -91,7 +90,7 @@ character, title of the graph.
 
 
   \item{diag}{
-logical, whether display the correlation on the principal diagonal.
+logical, whether display the correlation coefficients on the principal diagonal.
 }
 
   \item{outline}{
@@ -111,7 +110,7 @@ the color of grid, if \code{NULL}, don't add grid.
 
 
   \item{addnum.col}{
-col of numerical correlations, if \code{NULL}, don't add numerical correlations. Note: the figures are expressed in terms of a percentage for spacesaving.
+color of coefficients added on the glyph circle, square, etc.), if \code{NULL}, don't add coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
 }
 
   \item{order}{
@@ -208,7 +207,8 @@ numeric, for number-label in colorlabel, see \code{\link{text}}.
   \item{addshade}{
 character for shade style, \code{"negative"}, \code{"positive"} or \code{"all"}, 
 only valid when \code{method} is \code{shade}. If \code{"negative"}, only the negative
-correlation will be shaded; if \code{"positive"}, only the positive correlation will be shaded; if \code{"all"}, then all correlation will be shaded. Note: the angle of shade line is different, 45 degrees for positive and 135 degrees for negative.
+correlation coefficients' glyph will be shaded; if \code{"positive"}, only the positive correlation coefficients' glyph will be shaded; if \code{"all"}, then all correlation coefficients' glyph will be shaded. Note: the angle of shade line is different, 
+45 degrees for positive and 135 degrees for negative.
 }
 
   \item{shade.lwd}{
@@ -229,17 +229,17 @@ matrix of p-value, if \code{NULL}, arguments \code{sig.level}, \code{insig},
 
   \item{sig.level}{
 significant level,  if the p-value in \code{p-mat} is bigger than \code{sig.level}, then
-the corresponding correlation is regarded as insignificant.
+the corresponding correlation coefficient is regarded as insignificant.
 }
 
   \item{insig}{
-character, specialized insignificant correlation, \code{"pch"} (default), \code{"blank"}
+character, specialized insignificant correlation coefficients, \code{"pch"} (default), \code{"blank"}
 or \code{"no"}. If \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, 
 add characters (see \code{pch} for details) on 
 corresponding glyphs; if \code{"no"}, don't take any measures.
 }
   \item{pch}{
-add character on the glyphs of insignificant correlation (only valid when 
+add character on the glyphs of insignificant correlation coefficients(only valid when 
 \code{insig} is \code{"pch"}). See \code{\link{par}}.
 }
   \item{pch.col}{
@@ -255,7 +255,7 @@ the cex of pch (only valid when \code{insig} is \code{"pch"}).
   \item{plotCI}{
 character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval. 
 If \code{"rect"}, plot rectangles whose upper side means upper bound, lower side means 
-lower bound, and correlation values are also added on rectangles. If \code{"circle"}, first 
+lower bound, and correlation coefficients are also added on the rectangles. If \code{"circle"}, first 
 plot a circle of the bigger absolute bound, then plot the smaller's circle. Note: if the 
 two bounds are the same sign, then the filled color of smaller circle is forced to choose 
 the background color (\code{"bg"}), thus formed a ring; consequently, you should be 
