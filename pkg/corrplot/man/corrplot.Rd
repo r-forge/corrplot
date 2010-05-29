@@ -25,31 +25,33 @@ corresponding option it replaces such as circle, ellipse etc.
 }
 \usage{
 corrplot(corr,
-		method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
-		type = c("full", "lower", "upper"),	col = NULL, bg = "white", title = "",
-		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
-		addgrid.col = "gray", addnum.col= NULL,
+	method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
+	type = c("full", "lower", "upper"),	col = NULL, bg = "white", title = "",
+	diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
+	addgrid.col = "gray", addnum.col= NULL,
 
-		order = c("original", "PCA", "hclust", "alphabet"),
-		hclust.method = c("complete", "ward", "single", "average",
-							"mcquitty", "median", "centroid"),
-		addrect = NULL, rect.col="black", rect.lwd = 2,
+	order = c("original", "PCA", "hclust", "alphabet"),
+	hclust.method = c("complete", "ward", "single", "average",
+			"mcquitty", "median", "centroid"),
+		
+	addrect = NULL, rect.col="black", rect.lwd = 2,
 
-		addtextlabel = c("lt","ld","td","d", "no"), tl.cex = 1,
-		tl.col = "red", tl.offset = 0.4,
+	addtextlabel = c("lt","ld","td","d", "no"), tl.cex = 1,
+	tl.col = "red", tl.offset = 0.4,
 
-		addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max"),
-		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
+	addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max"),
+	cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
 
-		addshade = c("negtive", "positive", "all"),
-		shade.lwd = 1, shade.col = "white",
+	addshade = c("negtive", "positive", "all"),
+	shade.lwd = 1, shade.col = "white",
 
-		p.mat = NULL, sig.level = 0.05,
-		insig = c("pch","blank", "no"),
-		pch = 4, pch.col = "black", pch.cex = 3,
+	p.mat = NULL, sig.level = 0.05,
+	insig = c("pch","blank", "no"),
+	pch = 4, pch.col = "black", pch.cex = 3,
 
-		plotCI = c("no","square", "circle", "rect"),
-		lowCI.mat = NULL, uppCI.mat = NULL)
+	plotCI = c("no","square", "circle", "rect"),
+	lowCI.mat = NULL, uppCI.mat = NULL)
+	
 corrplot.circle(corr, ...)
 corrplot.square(corr, ...)
 corrplot.ellipse(corr,...)
@@ -60,22 +62,23 @@ corrplot.color(corr, ...)
 }
 \arguments{
   \item{corr}{
-the correlation matrix, must be square if \code{order} is not \code{"original"} (default).
+the correlation matrix, must be square if \code{order} is not \code{"original"}.
 }
   \item{method}{
-character, the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"}, \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. 
+character, the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"} (default), \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. 
 
 The areas of circles or squares show the absolute value of corresponding correlation. Method
 \code{"pie"} and \code{"shade"} came from Michael Friendly's job (with some adjustment 
 about the shade added on), and \code{"ellipse"} came from D.J. Murdoch and E.D. Chow's job, see in section References.
 }
   \item{type}{
-character, \code{"full"}, \code{"upper"} or \code{"lower"}, display full matrix,
+character, \code{"full"} (default), \code{"upper"} or \code{"lower"}, display full matrix,
 lower triangular or upper triangular of it.
 }
 
   \item{col}{
-vector, the color of glyphs, which is distributed uniformly from -1 to 1.
+vector, the color of glyphs for correlation or confidence level, 
+and it is distributed uniformly from -1 to 1. 
 }
 
   \item{bg}{
@@ -114,7 +117,7 @@ col of numerical correlations, if \code{NULL}, don't add numerical correlations.
   \item{order}{
 character, the ordering method of the correlation matrix.
 	\itemize{
-		\item \code{"original"} for orginal order.
+		\item \code{"original"} for original order.
 		\item \code{"alphabet"} for alphabetical order.
 		\item \code{"PCA"} for principal component analysis.
 		\item \code{"hclust"} for hierarchical clustering.
@@ -127,7 +130,7 @@ character, the agglomeration method to be used when \code{order} is \code{\link{
 }
 
   \item{addrect}{
-integer, the numer of rectangles drawed on the graph according to the hierarchical cluster,
+integer, the number of rectangles draws on the graph according to the hierarchical cluster,
 only valid when \code{order} is \code{hclust}. If its value is \code{NULL} (default), then
 don't add rectangles.
 }
@@ -170,11 +173,11 @@ numeric, for text label, see \code{\link{text}}.
 
 
   \item{addcolorlabel}{
-character, \code{"right"}, \code{"bottom"} or \code{"no"}, where to draw colorlabel. 
+character, \code{"right"} (default), \code{"bottom"} or \code{"no"}, where to draw colorlabel. 
 If \code{"no"}, don't draw colorlabel.
 }
   \item{cl.range}{
-character, \code{"-1to1"} or \code{"min2max"}, style of colorlabel.
+character, \code{"-1to1"} (default) or \code{"min2max"}, style of colorlabel.
 }
 
 \item{cl.length}{
@@ -190,7 +193,7 @@ numeric, to justify the width of colorlabel, 0.1~0.2 is suggested.
 }
 
 \item{cl.align.text}{
-character, \code{"l"}, \code{"c"} or \code{"r"}, for number-label in colorlabel, 
+character, \code{"l"}, \code{"c"} (default) or \code{"r"}, for number-label in colorlabel, 
 \code{"l"} means left, \code{"c"} means center, and \code{"r"} means right.
 }
 
@@ -230,30 +233,34 @@ the corresponding correlation is regarded as insignificant.
 }
 
   \item{insig}{
-character, specialized insignificant correlation, if \code{"blank"}, wipe away the
- corresponding glyphs; if \code{"pch"}, add characters(see \code{pch} for details) on 
+character, specialized insignificant correlation, \code{"pch"} (default), \code{"blank"}
+or \code{"no"}. If \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, 
+add characters (see \code{pch} for details) on 
 corresponding glyphs; if \code{"no"}, don't take any measures.
 }
   \item{pch}{
 add character on the glyphs of insignificant correlation (only valid when 
-\code{insig} is \code{pch}). See \code{\link{par}}.
+\code{insig} is \code{"pch"}). See \code{\link{par}}.
 }
   \item{pch.col}{
-the color of pch (only valid when \code{insig} is \code{pch}).
+the color of pch (only valid when \code{insig} is \code{"pch"}).
 }
   \item{pch.cex}{
-the cex of pch (only valid when \code{insig} is \code{pch}).
+the cex of pch (only valid when \code{insig} is \code{"pch"}).
 
 
 }
 
 
   \item{plotCI}{
-character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval; 
-if \code{"square"} or \code{"circle"}, plot two squares or circles whose areas are
-lower and upper bound of CI respectively; if \code{"rect"}, plot rects whose upper side
-means upper bound, lower side means low bound, and corrrlation values are also added on
-rects.
+character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval. 
+If \code{"rect"}, plot rectangles whose upper side means upper bound, lower side means 
+lower bound, and correlation values are also added on rectangles. If \code{"circle"}, first 
+plot a circle of the bigger absolute bound, then plot the smaller's circle. Note: if the 
+two bounds are the same sign, then the filled color of smaller circle is forced to choose 
+the background color (\code{"bg"}), thus formed a ring; consequently, you should be 
+. Method \code{"square"} is similar to \code{"circle"}. 
+
 }
   \item{lowCI.mat}{
 matrix of the lower bound of confidence interval.
@@ -425,16 +432,18 @@ corrplot(corr,low=res1[[2]], upp=res1[[3]],
 corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
 	plotC="circle", addg="grey20",addc="no")
 corrplot(corr, low=res1[[2]], upp=res1[[3]], 
-	col=c("white","black"),bg="gold2",
+	col=c("white","black"),bg="gold2",order="PCA",
 	plotCI="circle",addc="no",pch.col="red")
 corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], 
-	col=c("white","black"),bg="gold2",
+	col=c("white","black"),bg="gold2",order="PCA",
 	plotCI="circle",addc="no",pch.col="red")
 	
 ## plot confidence interval(0.95), "square" method	
 corrplot(corr, low=res1[[2]], upp=res1[[3]],
-	plotCI="square",addg=NULL,addc="no",pch.col=1)
+	col=c("white","black"),bg="gold2", order="PCA",
+	plotCI="square",addg=NULL,addc="no")
 corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
+	col=c("white","black"),bg="gold2",order="PCA",pch.col="red", 
 	plotC="square", addg=NULL,addc="no")
 	
 ## plot confidence interval(0.95, 0.95, 0.99), "rect" method
