@@ -255,11 +255,11 @@ the cex of pch (only valid when \code{insig} is \code{"pch"}).
   \item{plotCI}{
 character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval. 
 If \code{"rect"}, plot rectangles whose upper side means upper bound, lower side means 
-lower bound, and correlation coefficients are also added on the rectangles. If \code{"circle"}, first 
-plot a circle of the bigger absolute bound, then plot the smaller's circle. Note: if the 
+lower bound, and correlation coefficients are also added on the rectangles. If \code{"circle"}, first plot a circle of the bigger absolute bound, then plot the smaller. Note: if the 
 two bounds are the same sign, then the filled color of smaller circle is forced to choose 
-the background color (\code{"bg"}), thus formed a ring; consequently, you should be 
-. Method \code{"square"} is similar to \code{"circle"}. 
+the background color (\code{"bg"}), thus formed a ring; consequently, you should be careful
+to choose proper color(argument \code{"col"}) in this case, color of length 2 is 
+recommended (such as c("red", "blue"), c("white","black")). Method \code{"square"} is similar to \code{"circle"}. 
 
 }
   \item{lowCI.mat}{
