@@ -110,7 +110,7 @@ the color of grid, if \code{NULL}, don't add grid.
 
 
   \item{addnum.col}{
-color of coefficients added on the glyph circle, square, etc.), if \code{NULL}, don't add coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
+color of coefficients added on the glyph circle, square, etc.), if \code{NULL}, add no coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
 }
 
   \item{order}{
@@ -131,7 +131,7 @@ character, the agglomeration method to be used when \code{order} is \code{\link{
   \item{addrect}{
 integer, the number of rectangles draws on the graph according to the hierarchical cluster,
 only valid when \code{order} is \code{hclust}. If its value is \code{NULL} (default), then
-don't add rectangles.
+add no rectangles.
 }
 
   \item{rect.col}{
@@ -206,8 +206,10 @@ numeric, for number-label in colorlabel, see \code{\link{text}}.
 
   \item{addshade}{
 character for shade style, \code{"negative"}, \code{"positive"} or \code{"all"}, 
-only valid when \code{method} is \code{shade}. If \code{"negative"}, only the negative
-correlation coefficients' glyph will be shaded; if \code{"positive"}, only the positive correlation coefficients' glyph will be shaded; if \code{"all"}, then all correlation coefficients' glyph will be shaded. Note: the angle of shade line is different, 
+only valid when \code{method} is \code{"shade"}. If \code{"all"}, all
+correlation coefficients' glyph will be shaded; if \code{"positive"}, 
+only the positive will be shaded; if \code{"negative"}, only the negative 
+will be shaded. Note: the angle of shade line is different, 
 45 degrees for positive and 135 degrees for negative.
 }
 
@@ -281,7 +283,8 @@ additional arguments for \code{corrplot}'s wrappers
 }
 
 \details{
-.....
+\code{corrplot} function offers flexible ways to visualize correlation matrix, 
+lower and upper bound of confidence interval matrix. 
 }
 
 
