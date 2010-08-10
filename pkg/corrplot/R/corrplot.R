@@ -42,7 +42,7 @@ corrplot <- function(corr,
 	if(corr.min < -1 - .Machine$double.eps|| corr.max > 1 + .Machine$double.eps){
 		corr <- t(apply(corr, 1, function(x){
 								if(max(x) != min(x))
-									(2*(x-min(corr))/(max(corr)-min(corr)))-1
+									(2*(x-min(corr))/(max(corr)-min(corr)))- 1
 								else
 									rep(0, length=length(x))
 									
@@ -128,7 +128,14 @@ corrplot <- function(corr,
     mycolnames <- as.character(colnames(corr)[m1:m2])
     mycorr <- getMy.dat(corr)[[2]]
     len.mycorr <- length(mycorr)
-    col.fill <- col[ceiling((mycorr+1)*length(col)/2)]
+    col.fill <- col[ceiling((mycorr+1)*(length(col)-1)/2) + 1] #edited by Gang Chen, Aug 10, 2010
+	# Previous version:
+    # col.fill <- col[ceiling((mycorr+1)*length(col)/2)]
+	# Problem:
+	# range(mycorr): -1 to 1
+	# length(col): 200
+	# ceiling((mycorr+1)*length(col)/2): 0 - 200
+	# What is col[0]?
 
     if(outline)
 		col.border <- "black"
@@ -354,6 +361,9 @@ corrplot <- function(corr,
 			#Range <- c(min(mycorr), max(mycorr)) commented by Gang Chen, Aug 10, 2010
 			Range <- c(corr.min, corr.max) # added by Gang Chen, Aug 10, 2010
 			colRange <- col.fill[c(which.min(mycorr), which.max(mycorr))]
+			print(c(which.min(mycorr), which.max(mycorr)))
+			print(col.fill)
+			print(col)
 			ind1 <- which(col==colRange[1])
 			ind2 <- which(col==colRange[2])
 			colbar <- col[ind1:ind2]
