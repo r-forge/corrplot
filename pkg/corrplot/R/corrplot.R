@@ -42,12 +42,13 @@ corrplot <- function(corr,
 	if(corr.min < -1 - .Machine$double.eps|| corr.max > 1 + .Machine$double.eps){
 		corr <- t(apply(corr, 1, function(x){
 								if(max(x) != min(x))
-									((x-min(x))/(max(x)-min(x)))-1
+									(2*(x-min(corr))/(max(corr)-min(corr)))-1
 								else
 									rep(0, length=length(x))
 									
 				}))
 	}
+	print(corr)
 	# Following two lines are commented by Gang Chen, Aug 10, 2010
 	#if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
 	#	stop("The number in matrix should be in [-1, 1]!")
