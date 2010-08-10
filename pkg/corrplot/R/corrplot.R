@@ -48,7 +48,6 @@ corrplot <- function(corr,
 									
 				}))
 	}
-	print(corr)
 	# Following two lines are commented by Gang Chen, Aug 10, 2010
 	#if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
 	#	stop("The number in matrix should be in [-1, 1]!")
@@ -361,9 +360,6 @@ corrplot <- function(corr,
 			#Range <- c(min(mycorr), max(mycorr)) commented by Gang Chen, Aug 10, 2010
 			Range <- c(corr.min, corr.max) # added by Gang Chen, Aug 10, 2010
 			colRange <- col.fill[c(which.min(mycorr), which.max(mycorr))]
-			print(c(which.min(mycorr), which.max(mycorr)))
-			print(col.fill)
-			print(col)
 			ind1 <- which(col==colRange[1])
 			ind2 <- which(col==colRange[2])
 			colbar <- col[ind1:ind2]
