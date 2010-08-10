@@ -33,9 +33,24 @@ corrplot <- function(corr,
 
     if(!is.matrix(corr) )
         stop("Need a matrix!")
-		
-	if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
-		stop("The number in matrix should be in [-1, 1]!")
+	
+	#Following codes are added by Gang Chen, Aug 10, 2010
+	# Original maximum and minimum are recorded by two variables
+	# Then, the input matrix is normalized to [-1, 1] if matrix exceed [-1, 1]
+	corr.max <- max(corr)
+	corr.min <- min(corr)
+	if(corr.min < -1 - .Machine$double.eps|| corr.max > 1 + .Machine$double.eps){
+		corr <- t(apply(corr, 1, function(x){
+								if(max(x) != min(x))
+									((x-min(x))/(max(x)-min(x)))-1
+								else
+									rep(0, length=length(x))
+									
+				}))
+	}
+	# Following two lines are commented by Gang Chen, Aug 10, 2010
+	#if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
+	#	stop("The number in matrix should be in [-1, 1]!")
 		
 	if(is.null(col))
 		col <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
@@ -335,7 +350,8 @@ corrplot <- function(corr,
 
     if(addcolorlabel!="no"){
 		if(cl.range=="min2max"){
-			Range <- c(min(mycorr), max(mycorr))
+			#Range <- c(min(mycorr), max(mycorr)) commented by Gang Chen, Aug 10, 2010
+			Range <- c(corr.min, corr.max) # added by Gang Chen, Aug 10, 2010
 			colRange <- col.fill[c(which.min(mycorr), which.max(mycorr))]
 			ind1 <- which(col==colRange[1])
 			ind2 <- which(col==colRange[2])
