@@ -5,7 +5,8 @@
 #  last modified by Taiyun 2010-5-26 0:20:11
 corrplot <- function(corr,
 		method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
-		type = c("full", "lower", "upper"),	col = NULL, bg = "white", title = "",
+		type = c("full", "lower", "upper"),	col = NULL, assign.col=c("-1to1","min2max"),
+		bg = "white", title = "",
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
 		addgrid.col = "gray", addnum.col= NULL,
 
@@ -33,24 +34,9 @@ corrplot <- function(corr,
 
     if(!is.matrix(corr) )
         stop("Need a matrix!")
-	
-	#Following codes are added by Gang Chen, Aug 10, 2010
-	# Original maximum and minimum are recorded by two variables
-	# Then, the input matrix is normalized to [-1, 1] if matrix exceed [-1, 1]
-	corr.max <- max(corr)
-	corr.min <- min(corr)
-	if(corr.min < -1 - .Machine$double.eps|| corr.max > 1 + .Machine$double.eps){
-		corr <- t(apply(corr, 1, function(x){
-								if(max(x) != min(x))
-									(2*(x-min(corr))/(max(corr)-min(corr)))- 1
-								else
-									rep(0, length=length(x))
-									
-				}))
-	}
-	# Following two lines are commented by Gang Chen, Aug 10, 2010
-	#if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
-	#	stop("The number in matrix should be in [-1, 1]!")
+		
+	if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
+		stop("The number in matrix should be in [-1, 1]!")
 		
 	if(is.null(col))
 		col <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
@@ -127,15 +113,13 @@ corrplot <- function(corr,
     mycolnames <- as.character(colnames(corr)[m1:m2])
     mycorr <- getMy.dat(corr)[[2]]
     len.mycorr <- length(mycorr)
-    col.fill <- col[ceiling((mycorr+1)*(length(col)-1)/2) + 1] #edited by Gang Chen, Aug 10, 2010
-	# Previous version:
-    # col.fill <- col[ceiling((mycorr+1)*length(col)/2)]
-	# Problem:
-	# range(mycorr): -1 to 1
-	# length(col): 200
-	# ceiling((mycorr+1)*length(col)/2): 0 - 200
-	# What is col[0]?
-
+	 assign.col <- match.arg(assign.col)
+	 if(assign.col=="-1to1")
+		col.fill <- col[ceiling((mycorr+1)*(length(col)-1)/2) + 1]
+	 if(assign.col=="min2max"){
+		mycorr2 <- (mycorr-min(mycorr))/(diff(range(mycorr)))*2-1
+		col.fill <- col[ceiling((mycorr2+1)*(length(col)-1)/2) + 1]
+	 }
     if(outline)
 		col.border <- "black"
     if(!outline)
@@ -357,8 +341,7 @@ corrplot <- function(corr,
 
     if(addcolorlabel!="no"){
 		if(cl.range=="min2max"){
-			#Range <- c(min(mycorr), max(mycorr)) commented by Gang Chen, Aug 10, 2010
-			Range <- c(corr.min, corr.max) # added by Gang Chen, Aug 10, 2010
+			Range <- c(min(mycorr), max(mycorr))
 			colRange <- col.fill[c(which.min(mycorr), which.max(mycorr))]
 			ind1 <- which(col==colRange[1])
 			ind2 <- which(col==colRange[2])
@@ -367,8 +350,11 @@ corrplot <- function(corr,
 				labels <- round(seq(Range[1],Range[2], length=cl.length), 2)
 				at <- seq(0,1,length=length(labels))
 			} else {
-				warning("color is too few, cl.length is omited!")
-				labels <- 2*((ind1-1):ind2)/length(col) - 1
+				#warning("color is too few, cl.length is omited!")
+				if(assign.col=="-1to1")
+					labels <- 2*((ind1-1):ind2)/length(col) - 1
+				if(assign.col=="min2max")
+					labels <- seq(min(mycorr),max(mycorr),length=length(col)+1)
 				labels[1] <- min(mycorr)
 				labels[length(labels)] <- max(mycorr)
 				labels <- round(labels, 2)
@@ -376,6 +362,7 @@ corrplot <- function(corr,
 			}
 		}
 		if(cl.range=="-1to1"){
+			if(assign.col=="min2max") stop("assign.col shoulde be \"-1to1\"")
 			colbar <- col
 			labels <- round(seq(-1,1, length=min(cl.length,length(col)+1)), 2)
 			at <- seq(0,1,length=length(labels))
