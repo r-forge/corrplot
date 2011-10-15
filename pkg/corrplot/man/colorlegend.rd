@@ -69,7 +69,7 @@ Taiyun Wei
 }
 
 \examples{
-\dontrun{
+
 par(mar=rep(0,4))
 plot(0,xlim=c(0,6),ylim=c(-0.5,1.2),type="n")
 colorlegend(rainbow(100), 0:9)
@@ -84,7 +84,7 @@ colorlegend(colbar=grey(1:100/100),1:10, col="red",
 		xlim=c(0,6), ylim=c(-0.5,-0.1), vertical=FALSE, align="l")
 colorlegend(sample(rainbow(12)), labels=LETTERS[1:12], at=seq(0.05, 0.95, len=12),
 		xlim=c(0,6), ylim=c(1.1,1.2), vertical=FALSE)
-}
+
 }
 
 \keyword{hplot}% __ONLY ONE__ keyword per line

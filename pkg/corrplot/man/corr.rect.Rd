@@ -29,13 +29,13 @@ Taiyun Wei
 }
 
 \examples{
-\dontrun{
+
 data(mtcars)
 corr <- cor(mtcars)
 corrplot(corr, method="circle", order = "PCA")
 corr.rect(c(6,5))
 
-}
+
 }
 
 \keyword{hplot}% __ONLY ONE__ keyword per line

@@ -21,36 +21,37 @@ The details of graph are paid great attention to.
 \code{corrplot.pie}, \code{corrplot.shade}, and \code{corrplot.color} are
 convenience wrappers of \code{corrplot} that take the same arguments as the
 corresponding option it replaces such as circle, ellipse etc.
-
 }
+
 \usage{
 corrplot(corr,
-	method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
-	type = c("full", "lower", "upper"),	col = NULL, bg = "white", title = "",
-	diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
-	addgrid.col = "gray", addnum.col= NULL,
+		method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
+		type = c("full", "lower", "upper"),
+		col = NULL, assign.col = c("-1to1","min2max","0to1"),
+		bg = "white", title = "",
+		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
+		addgrid.col = "gray", addnum.col= NULL,
 
-	order = c("original", "PCA", "hclust", "alphabet"),
-	hclust.method = c("complete", "ward", "single", "average",
-			"mcquitty", "median", "centroid"),
+		order = c("original", "PCA", "hclust", "alphabet"),
+		hclust.method = c("complete", "ward", "single", "average",
+							"mcquitty", "median", "centroid"),
+		addrect = NULL, rect.col="black", rect.lwd = 2,
+
+		addtextlabel = c("lt","ld","td","d", "no"), tl.cex = 1,
+		tl.col = "red", tl.offset = 0.4,
+
+		addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max","0to1"),
+		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
+
+		addshade = c("negtive", "positive", "all"),
+		shade.lwd = 1, shade.col = "white",
+
+		p.mat = NULL, sig.level = 0.05,
+		insig = c("pch","blank", "no"),
+		pch = 4, pch.col = "black", pch.cex = 3,
 		
-	addrect = NULL, rect.col="black", rect.lwd = 2,
-
-	addtextlabel = c("lt","ld","td","d", "no"), tl.cex = 1,
-	tl.col = "red", tl.offset = 0.4,
-
-	addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max"),
-	cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
-
-	addshade = c("negtive", "positive", "all"),
-	shade.lwd = 1, shade.col = "white",
-
-	p.mat = NULL, sig.level = 0.05,
-	insig = c("pch","blank", "no"),
-	pch = 4, pch.col = "black", pch.cex = 3,
-
-	plotCI = c("no","square", "circle", "rect"),
-	lowCI.mat = NULL, uppCI.mat = NULL)
+		plotCI = c("no","square", "circle", "rect"),
+		lowCI.mat = NULL, uppCI.mat = NULL)
 	
 corrplot.circle(corr, ...)
 corrplot.square(corr, ...)
@@ -60,6 +61,7 @@ corrplot.shade(corr, ...)
 corrplot.pie(corr, ...)
 corrplot.color(corr, ...)
 }
+
 \arguments{
   \item{corr}{
 the correlation matrix, must be square if \code{order} is not \code{"original"}.
@@ -77,7 +79,12 @@ lower triangular or upper triangular of it.
 
   \item{col}{
 vector, the color of glyphs for correlation coefficients or confidence interval's bounds, 
-and it is distributed uniformly from -1 to 1. 
+and it is distributed uniformly according \code{"assign.col"} parameter. 
+}
+ 
+  \item{assign.col}{
+character, \code{"-1to1"} (default), \code{"min2max"} or \code{"0to1"}, the method of how to
+assign colors to the elements in the input matrix. See details in the examples.
 }
 
   \item{bg}{
@@ -99,8 +106,6 @@ logical, whether plot outline of circles, square and ellipse.
 
   \item{mar}{
 see \code{\link{par}}.
-
-
 }
 
 
@@ -176,7 +181,8 @@ character, \code{"right"} (default), \code{"bottom"} or \code{"no"}, where to dr
 If \code{"no"}, don't draw colorlabel.
 }
   \item{cl.range}{
-character, \code{"-1to1"} (default) or \code{"min2max"}, style of colorlabel.
+character, \code{"-1to1"} (default), \code{"min2max"}, or \code{"0to1"} style of colorlabel. 
+See details in the examples.
 }
 
 \item{cl.length}{
@@ -317,7 +323,7 @@ ARSA, BBURCG, BBWRCG, MDS, TSP, Chen and so forth.
 }
 
 \examples{
-\dontrun{
+
 
 data(mtcars)
 corr <- cor(mtcars)
@@ -456,7 +462,7 @@ corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
 	pch.col="red", sig.level = 0.01, addrect=3, rect.col="navy",
 	plotC="rect",addc="no")
 
-
+\dontrun{
 ## an animation of changing confidence interval in different significance level
 par(ask=FALSE)
 for(i in seq(0.1, 0.001, -0.001)){
