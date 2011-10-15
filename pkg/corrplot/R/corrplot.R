@@ -2,7 +2,7 @@
 #'
 #' @author Taiyun Wei
 #' @email weitaiyun@gmail.com
-#  last modified by Taiyun 2010-5-26 0:20:11
+#  last modified by Cloud Wei 2011-10-15
 corrplot <- function(corr,
 		method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
 		type = c("full", "lower", "upper"),
