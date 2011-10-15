@@ -26,7 +26,7 @@ corresponding option it replaces such as circle, ellipse etc.
 \usage{
 corrplot(corr,
 		method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
-		type = c("full", "lower", "upper"),
+		type = c("full", "lower", "upper"), add = FALSE,
 		col = NULL, assign.col = c("-1to1","min2max","0to1"),
 		bg = "white", title = "",
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
@@ -75,6 +75,10 @@ about the shade added on), and \code{"ellipse"} came from D.J. Murdoch and E.D. 
   \item{type}{
 character, \code{"full"} (default), \code{"upper"} or \code{"lower"}, display full matrix,
 lower triangular or upper triangular of it.
+}
+
+  \item{add}{
+  logical, if add is TRUE, the graph are added to an existing plot, otherwise a new plot is created.
 }
 
   \item{col}{
@@ -337,6 +341,14 @@ corrplot(corr, method="color", order = "PCA")
 corrplot(corr, method="shade", order = "PCA")
 corrplot(corr, method="pie", order = "PCA")
 
+## mixed methods
+corrplot(corr,order="PCA",type="upper",addtextlabel="no")
+corrplot(corr,add=TRUE, type="lower",
+	method="ell",order="PCA",addtextlabel="d")
+
+corrplot(corr,order="PCA",type="upper",addtextlabel="no")
+corrplot(corr,add=TRUE, type="lower",
+	method="square",order="PCA",addtextlabel="d")
 
 
 ## order is hclust and draw rectangles
@@ -458,7 +470,7 @@ corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
 	pch.col="red", sig.level = 0.01, addrect=3, rect.col="navy",
 	plotC="rect",addc="no")
 
-\dontrun{
+
 ## an animation of changing confidence interval in different significance level
 par(ask=FALSE)
 for(i in seq(0.1, 0.001, -0.001)){
@@ -470,8 +482,6 @@ for(i in seq(0.1, 0.001, -0.001)){
 	Sys.sleep(0.01)
 }
 
-
-}
 }
 
 \keyword{hplot}% __ONLY ONE__ keyword per line
