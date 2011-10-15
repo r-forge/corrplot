@@ -204,8 +204,6 @@ character, \code{"l"}, \code{"c"} (default) or \code{"r"}, for number-label in c
 
 \item{cl.offset}{
 numeric, for number-label in colorlabel, see \code{\link{text}}.
-
-
 }
 
 
@@ -224,8 +222,6 @@ numeric, the line width of shade.
 }
   \item{shade.col}{
 the color of shade line.
-
-
 }
 
 
