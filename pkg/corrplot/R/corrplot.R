@@ -30,7 +30,7 @@ corrplot <- function(corr,
 		pch = 4, pch.col = "black", pch.cex = 3,
 		
 		plotCI = c("no","square", "circle", "rect"),
-		lowCI.mat = NULL, uppCI.mat = NULL)
+		lowCI.mat = NULL, uppCI.mat = NULL, ...)
 {
 
 	if(!is.matrix(corr) )
@@ -423,17 +423,17 @@ corrplot <- function(corr,
 				bg = bg, fg = addgrid.col,
 				inches = FALSE, squares = rep(1, length(pos.ylabel[,1])))
 			text(pos.ylabel[,1]+0.5, pos.ylabel[,2], newcolnames[1:min(n,m)],
-                col = tl.col, cex = tl.cex * S1/S2)
+                col = tl.col, cex = tl.cex * S1/S2, ...)
 		} 
 		if(addtextlabel=="lt"){
 			text(pos.xlabel[,1], pos.xlabel[,2], newcolnames, srt = 90,
-                col = tl.col, cex = tl.cex * S1/S2, pos=3, offset=tl.offset)
+                col = tl.col, cex = tl.cex * S1/S2, pos=3, offset=tl.offset, ...)
 			text(pos.ylabel[,1], pos.ylabel[,2], newrownames,
-                col = tl.col, cex = tl.cex * S1/S2, pos=2, offset=tl.offset)
+                col = tl.col, cex = tl.cex * S1/S2, pos=2, offset=tl.offset, ...)
 		}
 	}
 
-	title(title)
+	title(title, ...)
    
 	## add numbers
 	if(!is.null(addnum.col)&(!method == "number")){

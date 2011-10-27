@@ -51,7 +51,7 @@ corrplot(corr,
 		pch = 4, pch.col = "black", pch.cex = 3,
 		
 		plotCI = c("no","square", "circle", "rect"),
-		lowCI.mat = NULL, uppCI.mat = NULL)
+		lowCI.mat = NULL, uppCI.mat = NULL, ...)
 	
 corrplot.circle(corr, ...)
 corrplot.square(corr, ...)
