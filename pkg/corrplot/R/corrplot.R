@@ -22,7 +22,7 @@ corrplot <- function(corr,
 		addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max","0to1"),
 		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
 
-		addshade = c("negtive", "positive", "all"),
+		addshade = c("neagtive", "positive", "all"),
 		shade.lwd = 1, shade.col = "white",
 
 		p.mat = NULL, sig.level = 0.05,
@@ -138,23 +138,29 @@ corrplot <- function(corr,
 	plot.window(c(m1-0.5, m2+0.5), c(n1-0.5, n2+0.5), asp = 1)
 	xlabwidth <- max(strwidth(newrownames, cex = tl.cex))
 	ylabwidth <- max(strwidth(newcolnames, cex = tl.cex))
+	laboffset <- strwidth("M", cex = tl.cex) * tl.offset
+	ylabwidth <- ylabwidth + laboffset
+	xlabwidth <- xlabwidth + laboffset
 	S1 <- max(nn,mm)**2
 
 	addtextlabel <- match.arg(addtextlabel)
-	if(addtextlabel=="no"|addtextlabel=="d") xlabwidth <- xlabwidth <- 0
+	if(addtextlabel=="no"|addtextlabel=="d") xlabwidth <- ylabwidth <- 0
+	if(addtextlabel=="td") xlabwidth <- 0
+	if(addtextlabel=="ld") ylabwidth <- 0
 	## set up an empty plot with the appropriate dimensions
 
 	addcolorlabel <- match.arg(addcolorlabel)
 	cl.range <- match.arg(cl.range) 
 	## color label
 	if(addcolorlabel=="no"){
-		plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5),
-					c(n1 - 0.5, n2 + 0.5 + ylabwidth),
+		plot.window(c(m1 - 0.5 - xlabwidth, m2 + 0.5),
+					c(n1 - 0.5, n2 + 0.5 ),
 					asp = 1, xlab="", ylab="")
 		S2 <- (mm + xlabwidth)*(mm + ylabwidth)##area of figure
 	}
+
 	if(addcolorlabel=="right"){
-		plot.window(c(-xlabwidth + m1 - 0.5, m2 + 0.5 + mm*cl.ratio),
+		plot.window(c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio),
 					c(n1 - 0.5, n2 + 0.5 + ylabwidth),
 					asp = 1, xlab="", ylab="")
 		S2 <- (mm + xlabwidth+ mm*cl.ratio)*(nn + ylabwidth)
@@ -228,7 +234,7 @@ corrplot <- function(corr,
 				dat <- cbind(c(x1, x1, x), c(y, y1, y1),
 						c(x, x2, x2), c(y2, y2 ,y))
 			}
-			if((addshade=="negtive"||addshade=="all")&rho<0){
+			if((addshade=="neagtive"||addshade=="all")&rho<0){
 				dat <- cbind(c(x1, x1, x), c(y, y2, y2),
 						c(x, x2, x2), c(y1, y1 ,y))
 			}

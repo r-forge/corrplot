@@ -37,13 +37,13 @@ corrplot(corr,
 							"mcquitty", "median", "centroid"),
 		addrect = NULL, rect.col="black", rect.lwd = 2,
 
-		addtextlabel = c("lt","ld","td","d", "no"), tl.cex = 1,
-		tl.col = "red", tl.offset = 0.4,
+		addtextlabel = NULL, tl.cex = 1,
+		tl.col = "red", tl.offset = 0.4, tl.srt = 90,
 
 		addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max","0to1"),
 		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
 
-		addshade = c("negtive", "positive", "all"),
+		addshade = c("negative", "positive", "all"),
 		shade.lwd = 1, shade.col = "white",
 
 		p.mat = NULL, sig.level = 0.05,
@@ -395,7 +395,7 @@ corrplot(corr, col = wb, bg="gold2",  order="PCA", addcolorlabel="no")
 
 
 ## addshade, addgrid and addnum
-corrplot.shade(corr, order="PCA", addshade = "negtive", addgrid.col=NULL)
+corrplot.shade(corr, order="PCA", addshade = "negative", addgrid.col=NULL)
 corrplot.shade(corr, order="PCA", addshade = "positive", addgrid.col=NULL)
 corrplot.shade(corr, order="PCA", addshade = "all", addgrid.col=NULL)
 corrplot.color(corr, order="PCA", addgrid.col=NULL)
