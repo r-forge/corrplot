@@ -113,10 +113,10 @@ corrplot <- function(corr,
 
 	Pos  <- getPos.Dat(corr)[[1]]
 	n2 <- max(Pos[,2]); n1 <- min(Pos[,2])
-	nn <- n2 -n1
+	nn <- n2 - n1
 	newrownames <- as.character(rownames(corr)[(n+1-n2):(n+1-n1)])
 	m2 <- max(Pos[,1]); m1 <- min(Pos[,1])
-	mm <- m2 -m1
+	mm <- m2 - m1
 	newcolnames <- as.character(colnames(corr)[m1:m2])
 	DAT <- getPos.Dat(corr)[[2]]
 	len.DAT <- length(DAT)
@@ -128,8 +128,7 @@ corrplot <- function(corr,
 		col.fill <- col[ceiling((newcorr+1)*(length(col)-1)/2) + 1]
 	}
 	if(assign.col=="0to1"){
-		if(any(DAT<0)) 
-			stop("There are negative numbers!")
+		if(any(DAT<0)) stop("There are negative numbers!")
 		newcorr <- DAT*2-1
 		col.fill <- col[ceiling((newcorr+1)*(length(col)-1)/2) + 1]
 	}	
@@ -141,22 +140,19 @@ corrplot <- function(corr,
 	## calculate label-text width approximately
 	par(mar = mar, bg = "white")
 	if(!add) plot.new()
+	xlabwidth <- ylabwidth <- 0
 	
-	plot.window(c(m1-0.5, m2+0.5), c(n1-0.5, n2+0.5), asp = 1, xaxs="i", yaxs="i")
-	xlabwidth <- max(strwidth(newrownames, cex = tl.cex))
-	ylabwidth <- max(strwidth(newcolnames, cex = tl.cex))
-	S1 <- max(nn,mm) + max(xlabwidth,ylabwidth) 
-		+ (addcolorlabel=="no")*mm*cl.ratio
-	tl.cexadj <- (S1/max(nn,mm))^2 * tl.cex
-	
-	xlabwidth <- max(strwidth(newrownames, cex = tl.cexadj))
-	ylabwidth <- max(strwidth(newcolnames, cex = tl.cexadj))
-	
-	laboffset <- strwidth("M", cex = tl.cex) * tl.offset
-	ylabwidth <- ylabwidth * abs(cos(tl.offset*pi/180)) + laboffset
-	xlabwidth <- xlabwidth + laboffset
-	
-
+	for(i in 1:50){
+		xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right"))
+		ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), n2 + 0.5 + ylabwidth)
+		plot.window(xlim + c(-0.2,0.2), ylim + c(-0.2,0.2), 
+			asp = 1,xaxs = "i", yaxs = "i")
+		x.tmp <- max(strwidth(newrownames, cex = tl.cex))
+		y.tmp <- max(strwidth(newcolnames, cex = tl.cex))
+		if(min(x.tmp-xlabwidth, y.tmp-ylabwidth) < 0.0001) break;
+		xlabwidth <- x.tmp
+		ylabwidth <- y.tmp
+	}
 	
 	if(is.null(addtextlabel)){
 		if(type=="full") addtextlabel <- "lt"
@@ -164,26 +160,23 @@ corrplot <- function(corr,
 		if(type=="upper") addtextlabel <- "td"
 	}
 	if(addtextlabel=="no"|addtextlabel=="d") xlabwidth <- ylabwidth <- 0
-	if(addtextlabel=="td") xlabwidth <- 0
-	if(addtextlabel=="ld") ylabwidth <- 0
-
-	## color label
-	if(addcolorlabel=="no"){
-		xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5)
-		ylim <- c(n1 - 0.5, n2 + 0.5 + ylabwidth)
+	if(addtextlabel=="td"){
+		ylabwidth <- 0
 	}
-
-	if(addcolorlabel=="right"){
-		xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio)
-		ylim <- c(n1 - 0.5, n2 + 0.5 + ylabwidth)
-	}
-	if(addcolorlabel=="bottom"){
-		xlim <- c(-xlabwidth + m1 - 0.5, m2 + 0.5)
-		ylim <- c(n1 - 0.5 - nn*cl.ratio, n2 + 0.5 + ylabwidth)
+	if(addtextlabel=="ld"){ 
+		xlabwidth <- 0
 	}
 	
+	laboffset <- strwidth("m", cex = tl.cex) * tl.offset
+	xlim <- c(m1 - 0.5 - xlabwidth - laboffset, 
+		m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right")) + c(-0.2,0.2)
+	ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
+		n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.2, 0.2)
+	
 	#dev.new(width=7, height=7*ylim/xlim)
-	plot.window(xlim=xlim, ylim=ylim, asp = 1, xlab="", ylab="")
+	windows.options(width=7, height=7*diff(ylim)/diff(xlim))
+	plot.window(xlim=xlim , ylim=ylim, 
+		asp = 1, xlab="", ylab="", xaxs = "i", yaxs = "i")
 	## background color
 	symbols(Pos, add = TRUE, inches = FALSE,
 			squares = rep(1, len.DAT), bg = bg, fg = bg)
@@ -443,7 +436,8 @@ corrplot <- function(corr,
 			text(pos.ylabel[,1]+0.5, pos.ylabel[,2], newcolnames[1:min(n,m)],
                 col = tl.col, cex = tl.cex, ...)
 		} else {
-			text(pos.xlabel[,1], pos.xlabel[,2], newcolnames, srt = tl.srt, adj=c(0,0),
+			text(pos.xlabel[,1], pos.xlabel[,2], newcolnames, srt = tl.srt, 
+				adj=ifelse(tl.srt==0, c(0.5,0), c(0,0)),
                 col = tl.col, cex = tl.cex, offset=tl.offset, ...)
 			text(pos.ylabel[,1], pos.ylabel[,2], newrownames,
                 col = tl.col, cex = tl.cex, pos=2, offset=tl.offset, ...)
@@ -474,4 +468,3 @@ corrplot <- function(corr,
 	invisible(ord)
 } 
 
-## end

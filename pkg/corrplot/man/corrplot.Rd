@@ -174,8 +174,10 @@ the color of text label.
 
   \item{tl.offset}{
 numeric, for text label, see \code{\link{text}}.
+}
 
-
+  \item{tl.srt}{
+numeric, for text label string rotation in degrees, see \code{\link{text}}.
 }
 
 
@@ -360,13 +362,14 @@ corrplot(corr, order="hclust", hclust.method="ward", addrect = 4)
 
 
 ## text-labels and plot type
-corrplot(corr, order="PCA", addtextlabel="d")
+corrplot(corr, order="PCA", tl.srt=45)
+corrplot(corr, order="PCA", addtextlabel="d",addco="no")
 corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d")
 corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d",cl.range="min2max")
-corrplot(corr, order="PCA", type="upper", addtextlabel="td")
-corrplot(corr, order="PCA", type="upper", diag=FALSE, addtextlabel="td")
-corrplot(corr, order="PCA", type="lower", addcolorlabel="b", addtextlabel="ld")
-corrplot(corr, order="PCA", type="lower", addcolorlabel="b", diag=FALSE, addtextlabel="ld")
+corrplot(corr, order="PCA", type="upper")
+corrplot(corr, order="PCA", type="upper", diag=FALSE)
+corrplot(corr, order="PCA", type="lower", addcolorlabel="b")
+corrplot(corr, order="PCA", type="lower", addcolorlabel="b", diag=FALSE)
 
 
 
@@ -476,7 +479,7 @@ par(ask=FALSE)
 for(i in seq(0.1, 0.001, -0.001)){
 	tmp <- cor.mtest(mtcars,1-i)
 	corrplot(corr, p.mat = tmp[[1]], low=tmp[[2]], upp=tmp[[3]], order="hclust",
-		pch.col="red", sig.level = i, plotC="rect",addc="no",
+		pch.col="red", sig.level = i, plotC="rect", addc="no",
 		mar=c(0,0,1,0), 
 		title=substitute(alpha == x,list(x=format(i,digits=3,nsmall=3))))
 	Sys.sleep(0.01)
