@@ -125,7 +125,7 @@ corrplot <- function(corr,
 	if(assign.col=="min2max") newcorr <- (DAT-min(DAT))/(diff(range(DAT)))
 	if(assign.col=="0to1")	if(any(DAT<0)) stop("There are negative numbers!")
 	
-	newcorr[newcorr==0] <- 1e-5
+	newcorr[newcorr==0] <- 1e-16
 	col.fill <- col[ceiling(newcorr*length(col))]
 	
 	
@@ -167,8 +167,9 @@ corrplot <- function(corr,
 	ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
 		n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.15, 0.35)
 	
-	#dev.new(width=7, height=7*ylim/xlim)
-	windows.options(width=7, height=7*diff(ylim)/diff(xlim))
+    if (.Platform$OS.type == "windows"){
+		windows.options(width=7, height=7*diff(ylim)/diff(xlim))
+	} 
 	plot.window(xlim=xlim , ylim=ylim, 
 		asp = 1, xlab="", ylab="", xaxs = "i", yaxs = "i")
 	## background color
