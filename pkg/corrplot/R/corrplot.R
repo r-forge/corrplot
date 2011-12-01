@@ -18,7 +18,7 @@ corrplot <- function(corr,
 		addtextlabel = NULL, tl.cex = 1,
 		tl.col = "red", tl.offset = 0.4, tl.srt = 90,
 
-		addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max","0to1"),
+		addcolorlabel = c("right", "bottom","no"), cl.range=NULL,
 		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
 
 		addshade = c("negative", "positive", "all"),
@@ -37,10 +37,10 @@ corrplot <- function(corr,
 	assign.col <- match.arg(assign.col)
 	order <- match.arg(order)
 	hclust.method <- match.arg(hclust.method)
-	cl.range <- match.arg(cl.range)
 	addcolorlabel <- match.arg(addcolorlabel)
 	plotCI <- match.arg(plotCI)
 	insig <- match.arg(insig)
+	if(is.null(cl.range)) cl.range <- assign.col
 	
 	if(!is.matrix(corr) )
 		stop("Need a matrix!")
@@ -50,7 +50,7 @@ corrplot <- function(corr,
 		
 	if(is.null(col))
 		col <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
-				"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))(200)
+			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))(200)	
 	n <- nrow(corr)
 	m <- ncol(corr)
 	min.nm <- min(n,m)
@@ -121,17 +121,15 @@ corrplot <- function(corr,
 	DAT <- getPos.Dat(corr)[[2]]
 	len.DAT <- length(DAT)
 
-	if(assign.col=="-1to1")
-		col.fill <- col[ceiling((DAT+1)*(length(col)-1)/2) + 1]
-	if(assign.col=="min2max"){
-		newcorr <- (DAT-min(DAT))/(diff(range(DAT)))*2-1
-		col.fill <- col[ceiling((newcorr+1)*(length(col)-1)/2) + 1]
-	}
-	if(assign.col=="0to1"){
-		if(any(DAT<0)) stop("There are negative numbers!")
-		newcorr <- DAT*2-1
-		col.fill <- col[ceiling((newcorr+1)*(length(col)-1)/2) + 1]
-	}	
+	if(assign.col=="-1to1")   newcorr <- (DAT + 1)/2
+	if(assign.col=="min2max") newcorr <- (DAT-min(DAT))/(diff(range(DAT)))
+	if(assign.col=="0to1")	if(any(DAT<0)) stop("There are negative numbers!")
+	
+	newcorr[newcorr==0] <- 1e-5
+	col.fill <- col[ceiling(newcorr*length(col))]
+	
+	
+	
 	if(outline)
 		col.border <- "black"
 	if(!outline)
@@ -146,7 +144,7 @@ corrplot <- function(corr,
 		xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right"))
 		ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), n2 + 0.5 + ylabwidth)
 		plot.window(xlim + c(-0.2,0.2), ylim + c(-0.2,0.2), 
-			asp = 1,xaxs = "i", yaxs = "i")
+			asp = 1, xaxs = "i", yaxs = "i")
 		x.tmp <- max(strwidth(newrownames, cex = tl.cex))
 		y.tmp <- max(strwidth(newcolnames, cex = tl.cex))
 		if(min(x.tmp-xlabwidth, y.tmp-ylabwidth) < 0.0001) break;
@@ -160,18 +158,14 @@ corrplot <- function(corr,
 		if(type=="upper") addtextlabel <- "td"
 	}
 	if(addtextlabel=="no"|addtextlabel=="d") xlabwidth <- ylabwidth <- 0
-	if(addtextlabel=="td"){
-		ylabwidth <- 0
-	}
-	if(addtextlabel=="ld"){ 
-		xlabwidth <- 0
-	}
+	if(addtextlabel=="td")	ylabwidth <- 0
+	if(addtextlabel=="ld")	xlabwidth <- 0
 	
-	laboffset <- strwidth("m", cex = tl.cex) * tl.offset
+	laboffset <- strwidth("W", cex = tl.cex) * tl.offset
 	xlim <- c(m1 - 0.5 - xlabwidth - laboffset, 
-		m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right")) + c(-0.2,0.2)
+		m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right")) + c(-0.35,0.15)
 	ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
-		n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.2, 0.2)
+		n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.15, 0.35)
 	
 	#dev.new(width=7, height=7*ylim/xlim)
 	windows.options(width=7, height=7*diff(ylim)/diff(xlim))
@@ -383,13 +377,17 @@ corrplot <- function(corr,
 			}
 		}
 		if(cl.range=="-1to1"){
-			if(assign.col!="-1to1") stop("assign.col shoulde be \"-1to1\"")
+			if(assign.col!="-1to1") 
+			stop("assign.col shoulde be \"-1to1\" if cl.range==\"-1to1\"")
+			
 			colbar <- col
 			labels <- round(seq(-1,1, length=min(cl.length,length(col)+1)), 2)
 			at <- seq(0,1,length=length(labels))
 		}
 		if(cl.range=="0to1"){
-			if(assign.col!="0to1") stop("assign.col shoulde be \"0to1\"")
+			if(assign.col!="0to1") 
+			stop("assign.col shoulde be \"0to1\" if cl.range==\"0to1\"")
+			
 			colbar <- col
 			labels <- round(seq(0,1, length=min(cl.length,length(col)+1)), 2)
 			at <- seq(0,1,length=length(labels))

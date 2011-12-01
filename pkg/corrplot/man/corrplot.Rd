@@ -119,7 +119,7 @@ the color of grid, if \code{NULL}, don't add grid.
 
 
   \item{addnum.col}{
-color of coefficients added on the glyph circle, square, etc.), if \code{NULL}, add no coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
+color of coefficients added on the glyph circle, square, etc. if \code{NULL} (default), add no coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
 }
 
   \item{order}{
@@ -187,7 +187,8 @@ character, \code{"right"} (default), \code{"bottom"} or \code{"no"}, where to dr
 If \code{"no"}, don't draw colorlabel.
 }
   \item{cl.range}{
-character, \code{"-1to1"} (default), \code{"min2max"}, or \code{"0to1"} style of colorlabel. 
+character, \code{"-1to1"}, \code{"min2max"}, or \code{"0to1"} style of colorlabel. 
+The default value is the same with \code{"assign.col"}.
 See details in the examples.
 }
 
@@ -335,13 +336,13 @@ par(ask = TRUE)
 corrplot(corr, method="number", col="black", addcolorlabel="no")
 corrplot(corr, method="number")
 corrplot(corr)
-corrplot(corr, order="hclust")
 corrplot(corr, order ="PCA")
+corrplot(corr, method="color", order = "PCA", addnum.col=grey(0.1))
 corrplot(corr, method="square", order = "PCA")
 corrplot(corr, method="ellipse", order = "PCA")
-corrplot(corr, method="color", order = "PCA")
 corrplot(corr, method="shade", order = "PCA")
 corrplot(corr, method="pie", order = "PCA")
+
 
 ## mixed methods
 corrplot(corr,order="PCA",type="upper",addtextlabel="no")
@@ -354,16 +355,42 @@ corrplot(corr,add=TRUE, type="lower",
 
 
 ## order is hclust and draw rectangles
+corrplot(corr, order="hclust")
 corrplot(corr, order="hclust", addrect = 2)
 corrplot(corr, order="hclust", addrect = 3, rect.col = "red")
 corrplot(corr, order="hclust", addrect = 4, rect.col = "blue")
 corrplot(corr, order="hclust", hclust.method="ward", addrect = 4)
 
+##  color of matrix
+col1 <- colorRampPalette(rev(c("#00007F", "blue", "#007FFF", "cyan",
+            "white", "yellow", "#FF7F00", "red", "#7F0000")))
+col2 <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
+			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))	
+col3 <- colorRampPalette(c("red", "white", "blue"))			
+wb <- c("white","black")
+## col1
+corrplot(corr, order="PCA", col=col1(15), cl.length=16)
+corrplot(corr, order="PCA", col=col1(9))
+corrplot(corr, order="PCA", col=col1(6))
+corrplot(corr, order="PCA", col=col1(4))
+## col2
+corrplot(corr, order="PCA", col=col2(20))
+corrplot(corr, order="PCA", col=col2(10))
+corrplot(corr, order="PCA", col=col2(8))
+## col3
+corrplot(corr, order="PCA", col=col3(100))
+corrplot(corr, order="PCA", col=col3(10))
+## col=wb
+corrplot(corr, col = wb, order="PCA", outline=TRUE, addcolorlabel="no")
+## like Chinese wiqi, suit for either on screen or white-black print.
+corrplot(corr, col = wb, bg="gold2",  order="PCA", addcolorlabel="no")
+
 
 
 ## text-labels and plot type
 corrplot(corr, order="PCA", tl.srt=45)
-corrplot(corr, order="PCA", addtextlabel="d",addco="no")
+corrplot(corr, order="PCA", tl.srt=60)
+corrplot(corr, order="PCA", addtextlabel="d",addcolorlabel="no")
 corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d")
 corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d",cl.range="min2max")
 corrplot(corr, order="PCA", type="upper")
@@ -373,27 +400,13 @@ corrplot(corr, order="PCA", type="lower", addcolorlabel="b", diag=FALSE)
 
 
 
-#### color-legend, corr-color, and background-color
+#### color-legend
 corrplot(corr, order="PCA", cl.ratio=0.1, cl.align="r", cl.offset=0)
-corrplot(corr, order="PCA", cl.ratio=0.15,cl.length=9)
+corrplot(corr, order="PCA", cl.ratio=0.15, cl.length=9)
 corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="l")
-corrplot(corr, order="PCA", addcolorlabel="b")
-corrplot(corr, order="PCA", addcolorlabel="b",cl.range="min2max",addt="d")
+corrplot(corr, order="PCA", addcolorlabel="bottom")
+corrplot(corr, order="PCA", addcolorlabel="bottom", cl.range="min2max", addtextlabel="d")
 corrplot(corr, order="PCA", addcolorlabel="no")
-col1 <- rev(heat.colors(100))
-col2 <- colorRampPalette(c("red", "white", "blue"))
-col3 <- colorRampPalette(rev(c("#00007F", "blue", "#007FFF", "cyan",
-                     "white", "yellow", "#FF7F00", "red", "#7F0000")))
-col4 <- grey(10:1/10)
-wb <- c("white","black")
-corrplot(corr, order="PCA", col=col1)
-corrplot(corr, order="PCA", col=col2(100))
-corrplot(corr, order="PCA", col=col3(100))
-corrplot(corr, order="PCA", col=col4)
-
-corrplot(corr, col = wb, order="PCA", outline=TRUE, addcolorlabel="no")
-## like Chinese wiqi, suit for either on screen or white-black print.
-corrplot(corr, col = wb, bg="gold2",  order="PCA", addcolorlabel="no")
 
 
 
