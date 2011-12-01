@@ -40,7 +40,7 @@ corrplot(corr,
 		addtextlabel = NULL, tl.cex = 1,
 		tl.col = "red", tl.offset = 0.4, tl.srt = 90,
 
-		addcolorlabel = c("right", "bottom","no"), cl.range=c( "-1to1","min2max","0to1"),
+		addcolorlabel = c("right", "bottom","no"), cl.range=NULL,
 		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
 
 		addshade = c("negative", "positive", "all"),
