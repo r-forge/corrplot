@@ -12,7 +12,7 @@ corrplot <- function(corr,
 
 		order = c("original", "PCA", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
-							"mcquitty", "median", "centroid"),
+			"mcquitty", "median", "centroid"),
 		addrect = NULL, rect.col="black", rect.lwd = 2,
 
 		addtextlabel = NULL, tl.cex = 1,
@@ -167,8 +167,10 @@ corrplot <- function(corr,
 	ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
 		n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.15, 0.35)
 
-	if(.Platform$OS.type == "windows") 
-	windows.options(width=7, height=7*diff(ylim)/diff(xlim))
+	if(.Platform$OS.type == "windows"){ 
+		windows.options(width=7, height=7*diff(ylim)/diff(xlim))
+	}
+	
 	plot.window(xlim=xlim , ylim=ylim, 
 		asp = 1, xlab="", ylab="", xaxs = "i", yaxs = "i")
 		
