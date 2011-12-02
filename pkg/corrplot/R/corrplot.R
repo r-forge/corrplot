@@ -10,7 +10,7 @@ corrplot <- function(corr,
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
 		addgrid.col = "gray", addCoef.col= NULL,
 
-		order = c("original", "PCA", "hclust", "alphabet"),
+		order = c("original", "AOE", "FPC", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
 			"mcquitty", "median", "centroid"),
 		addrect = NULL, rect.col="black", rect.lwd = 2,
@@ -59,39 +59,9 @@ corrplot <- function(corr,
 	n <- nrow(corr)
 	m <- ncol(corr)
 	min.nm <- min(n,m)
-
-
-	NewOrder <- function(corr, order, ...){
-		if((!n==m)&(!order=="original")){
-			stop("The matrix must be squre if reorder variables!")
-		}
-
-		## reorder the variables using principal component analysis
-		if (order == "PCA") {
-			x.eigen <- eigen(corr)$vectors[, 1:2]
-			e1 <- x.eigen[, 1]
-			e2 <- x.eigen[, 2]
-			alpha <- ifelse(e1 > 0, atan(e2/e1), atan(e2/e1) + pi)
-			ord <- order(alpha)
-		}
-
-		## reorder the variables in alphabet ordering
-		if(order =="alphabet"){
-			ord <- sort(rownames(corr))
-		}
-
-		## reorder the variables using hclhust
-		if(order == "hclust"){
-			ord <- order.dendrogram(as.dendrogram(hclust(as.dist(1-corr),
-			method = hclust.method)))
-		}
-
-		return(ord)
-	}
-
 	ord <- NA
 	if(!order=="original"){
-		ord <- NewOrder(corr, order=order)
+		ord <- corrMatOrder(corr, order=order, hclust.method=hclust.method)
 		corr <- corr[ord,ord]
 	}
 	## set up variable names
@@ -135,7 +105,11 @@ corrplot <- function(corr,
 	newcorr[newcorr==0] <- 1e-5
 	col.fill <- col[ceiling(newcorr*length(col))]
 	
-	
+	if(is.null(addtextlabel)){
+		if(type=="full") addtextlabel <- "lt"
+		if(type=="lower") addtextlabel <- "ld"
+		if(type=="upper") addtextlabel <- "td"
+	}	
 	
 	if(outline)
 		col.border <- "black"
@@ -143,45 +117,46 @@ corrplot <- function(corr,
 		col.border <- col.fill
 
 	## calculate label-text width approximately
-	par(mar = mar, bg = "white")
-	if(!add) plot.new()
-	xlabwidth <- ylabwidth <- 0
+	if(!add){
+		par(mar = mar, bg = "white")
+		plot.new()
+		xlabwidth <- ylabwidth <- 0
 	
-	for(i in 1:50){
-		xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right"))
-		ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), n2 + 0.5 + ylabwidth)
-		plot.window(xlim + c(-0.2,0.2), ylim + c(-0.2,0.2), 
-			asp = 1, xaxs = "i", yaxs = "i")
-		x.tmp <- max(strwidth(newrownames, cex = tl.cex))
-		y.tmp <- max(strwidth(newcolnames, cex = tl.cex))
-		if(min(x.tmp-xlabwidth, y.tmp-ylabwidth) < 0.0001) break;
-		xlabwidth <- x.tmp
-		ylabwidth <- y.tmp
-	}
-	
-	if(is.null(addtextlabel)){
-		if(type=="full") addtextlabel <- "lt"
-		if(type=="lower") addtextlabel <- "ld"
-		if(type=="upper") addtextlabel <- "td"
-	}
-	if(addtextlabel=="no"|addtextlabel=="d") xlabwidth <- ylabwidth <- 0
-	if(addtextlabel=="td")	ylabwidth <- 0
-	if(addtextlabel=="ld")	xlabwidth <- 0
-	
-	laboffset <- strwidth("W", cex = tl.cex) * tl.offset
-	xlim <- c(m1 - 0.5 - xlabwidth - laboffset, 
-		m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right")) + c(-0.35,0.15)
-	ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
-		n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.15, 0.35)
+		for(i in 1:50){
+			xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right"))
+			ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), n2 + 0.5 + ylabwidth)
+			plot.window(xlim + c(-0.2,0.2), ylim + c(-0.2,0.2), 
+				asp = 1, xaxs = "i", yaxs = "i")
+			x.tmp <- max(strwidth(newrownames, cex = tl.cex))
+			y.tmp <- max(strwidth(newcolnames, cex = tl.cex))
+			if(min(x.tmp-xlabwidth, y.tmp-ylabwidth) < 0.0001) break;
+			xlabwidth <- x.tmp
+			ylabwidth <- y.tmp
+		}
 
-	if(.Platform$OS.type == "windows"){ 
-		windows.options(width=7, height=7*diff(ylim)/diff(xlim))
-	}
+		if(addtextlabel=="no"|addtextlabel=="d") xlabwidth <- ylabwidth <- 0
+		if(addtextlabel=="td")	ylabwidth <- 0
+		if(addtextlabel=="ld")	xlabwidth <- 0
 	
-	plot.window(xlim=xlim , ylim=ylim, 
-		asp = 1, xlab="", ylab="", xaxs = "i", yaxs = "i")
-		
-	## background color
+		laboffset <- strwidth("W", cex = tl.cex) * tl.offset
+		xlim <- c(m1 - 0.5 - xlabwidth - laboffset, 
+			m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right")) + c(-0.35,0.15)
+		ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
+			n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.15, 0.35)
+
+		if(.Platform$OS.type == "windows"){ 
+			windows.options(width=7, height=7*diff(ylim)/diff(xlim))
+		}
+	
+		plot.window(xlim=xlim , ylim=ylim, 
+			asp = 1, xlab="", ylab="", xaxs = "i", yaxs = "i")
+	}	
+	
+	## for: add = TRUE
+	laboffset <- strwidth("W", cex = tl.cex) * tl.offset
+
+	
+	## squares
 	symbols(Pos, add = TRUE, inches = FALSE,
 			squares = rep(1, len.DAT), bg = bg, fg = bg)
 	
@@ -463,14 +438,16 @@ corrplot <- function(corr,
 		rect(m1-0.5, n1-0.5, m2+0.5, n2+0.5, border=addgrid.col)
 	##  draws rectangles
 	if(!is.null(addrect)&order=="hclust"&type=="full"){
-		tree <- hclust(as.dist(1-corr), method = hclust.method)
-		hc <- cutree(tree, k = addrect)
-		clustab <- table(hc)[unique(hc[tree$order])]
-		cu <- c(0, cumsum(clustab))
-		mat <- cbind(cu[-(addrect + 1)] + 0.5, n - cu[-(addrect + 1)] + 0.5,
-					cu[-1] + 0.5, n - cu[-1] + 0.5)
-		rect(mat[,1], mat[,2], mat[,3], mat[,4], border = rect.col, 
-			lwd = rect.lwd)
+		# tree <- hclust(as.dist(1-corr), method = hclust.method)
+		# hc <- cutree(tree, k = addrect)
+		# clustab <- table(hc)[unique(hc[tree$order])]
+		# cu <- c(0, cumsum(clustab))
+		# mat <- cbind(cu[-(addrect + 1)] + 0.5, n - cu[-(addrect + 1)] + 0.5,
+					# cu[-1] + 0.5, n - cu[-1] + 0.5)
+		# rect(mat[,1], mat[,2], mat[,3], mat[,4], border = rect.col, 
+			# lwd = rect.lwd)
+		corrHclust.rect(corr, k = addrect, 
+			method = hclust.method, col = rect.col, lwd = rect.lwd)
 	}
 
 	invisible(ord)

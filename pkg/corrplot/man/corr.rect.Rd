@@ -1,29 +1,49 @@
 \name{corr.rect}
 \Rdversion{1.1}
 \alias{corr.rect}
+\alias{corrHclust.rect}
 
 \title{
 Draw rectangle(s) on the correlation matrix graph.
 }
 \description{
-Draw rectangle(s) around the chart of corrrlation matrix based on the number 
-of each cluster's members.
+Draw rectangle(s) around the chart of corrrlation matrix. 
+
+\code{corr.rect} needs parameter (\code{clus}) of each cluster's members, while \code{corrHclust.rect} can calculate each cluster's members based hierarchical clustering (\code{\link{hclust}}).
 }
 \usage{
-corr.rect(clus, rect.col = "black", lwd = 2)
+corr.rect(clus,  col = "black", lwd = 2)
+
+corrHclust.rect(corr, k=2, col = "black", lwd = 2,
+	method = c("complete", "ward", "single", "average","mcquitty", "median", "centroid"))
 }
 
 \arguments{
   \item{clus}{
 vector, the number of each cluster's members.
 }
-  \item{rect.col}{
+
+  \item{corr}{
+correlation matrix for function \code{corrHclust.rect}. It use \code{1-corr} as dist in  hierarchical clustering (\code{\link{hclust}}).
+}
+
+  \item{k}{
+integer, the number of rectangles draws on the graph according to the hierarchical cluster,
+for function \code{corrHclust.rect}.
+}
+  \item{col}{
 color of rectangles.  
 }
   \item{lwd}{
 line width of rectangles.
 }
+
+  \item{method}{
+character, the agglomeration method to be used for hierarchical clustering (\code{\link{hclust}}). This should be (an unambiguous abbreviation of) one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
 }
+}
+
+
 \author{
 Taiyun Wei
 }
@@ -31,10 +51,35 @@ Taiyun Wei
 \examples{
 
 data(mtcars)
-corr <- cor(mtcars)
-corrplot(corr, method="circle", order = "PCA")
-corr.rect(c(6,5))
+M <- cor(mtcars)
+corrplot(M, method="circle", order = "FPC")
+corr.rect(c(5,6))
 
+(order.hc <- corrMatOrder(M, order="hclust"))
+(order.hc2 <- corrMatOrder(M, order="hclust", hclust.method="ward"))
+M.hc  <- M[order.hc, order.hc ]
+M.hc2 <- M[order.hc2,order.hc2]
+
+par(ask=TRUE)
+##same as: corrplot(M, order="hclust", addrect=2)
+corrplot(M.hc)
+corrHclust.rect(corr=M.hc, k=2)
+
+##same as: corrplot(M, order="hclust", addrect=3)
+corrplot(M.hc)
+corrHclust.rect(corr=M.hc, k=3)
+
+##same as: corrplot(M, order="hclust", hclust.method="ward", addrect=2)
+corrplot(M.hc2)
+corrHclust.rect(M.hc2, k=2, method="ward")
+
+##same as: corrplot(M, order="hclust", hclust.method="ward", addrect=3)
+corrplot(M.hc2)
+corrHclust.rect(M.hc2, k=3, method="ward")
+
+##same as: corrplot(M, order="hclust", hclust.method="ward", addrect=4)
+corrplot(M.hc2)
+corrHclust.rect(M.hc2, k=4, method="ward")
 
 }
 

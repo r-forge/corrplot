@@ -13,7 +13,7 @@ confidence interval. It also contains some algorithms to do matrix reordering.
 \tabular{ll}{
 Package: \tab corrplot\cr
 Type: \tab Package\cr
-Version: \tab 0.54 \cr
+Version: \tab 0.55 \cr
 Date: \tab 2011-12-02\cr
 License: \tab GPL-2 | GPL-3\cr
 LazyLoad: \tab yes\cr

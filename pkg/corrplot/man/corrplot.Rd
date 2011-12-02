@@ -1,13 +1,6 @@
 \name{corrplot}
 \Rdversion{1.1}
 \alias{corrplot}
-\alias{corrplot.circle}
-\alias{corrplot.square}
-\alias{corrplot.ellipse}
-\alias{corrplot.number}
-\alias{corrplot.shade}
-\alias{corrplot.pie}
-\alias{corrplot.color}
 
 \title{
 A visualization of a correlation matrix.
@@ -32,7 +25,7 @@ corrplot(corr,
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
 		addgrid.col = "gray", addCoef.col= NULL,
 
-		order = c("original", "PCA", "hclust", "alphabet"),
+		order = c("original", "AOE", "FPC", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
 							"mcquitty", "median", "centroid"),
 		addrect = NULL, rect.col="black", rect.lwd = 2,
@@ -52,14 +45,6 @@ corrplot(corr,
 		
 		plotCI = c("no","square", "circle", "rect"),
 		lowCI.mat = NULL, uppCI.mat = NULL, ...)
-	
-corrplot.circle(corr, ...)
-corrplot.square(corr, ...)
-corrplot.ellipse(corr,...)
-corrplot.number(corr, ...)
-corrplot.shade(corr, ...)
-corrplot.pie(corr, ...)
-corrplot.color(corr, ...)
 }
 
 \arguments{
@@ -123,18 +108,20 @@ color of coefficients added on the glyph circle, square, etc. if \code{NULL} (de
 }
 
   \item{order}{
-character, the ordering method of the correlation matrix.
+character, the ordering method of the correlation matrix. 
 	\itemize{
 		\item \code{"original"} for original order.
+		\item \code{"AOE"} for the angular order of the eigenvectors. See Michael Friendly (2002) for details.
+		\item \code{"FPC"} for the first principal component order.
+		\item \code{"hclust"} for hierarchical clustering order.
 		\item \code{"alphabet"} for alphabetical order.
-		\item \code{"PCA"} for principal component analysis.
-		\item \code{"hclust"} for hierarchical clustering.
 	}
+
+See function \code{\link{corrMatOrder}}.
 }
 
   \item{hclust.method}{
 character, the agglomeration method to be used when \code{order} is \code{\link{hclust}}. This should be one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
-
 }
 
   \item{addrect}{
@@ -281,8 +268,7 @@ matrix of the upper bound of confidence interval.
 
 
   \item{\dots}{
-additional arguments for \code{corrplot}'s wrappers 
-(\code{corrplot.circle}, \code{corrplot.square}, etc.), passed to \code{corrplot}.
+additional arguments passing to function \code{text} for drawing text lable.
 }
 
 }
@@ -329,37 +315,49 @@ ARSA, BBURCG, BBWRCG, MDS, TSP, Chen and so forth.
 
 
 data(mtcars)
-corr <- cor(mtcars)
+M <- cor(mtcars)
 par(ask = TRUE)
 
 ## different methods to display corr-matrix
-corrplot(corr, method="number", col="black", addcolorlabel="no")
-corrplot(corr, method="number")
-corrplot(corr)
-corrplot(corr, order ="PCA")
-corrplot(corr, method="color", order = "PCA", addCoef.col=grey(0.1))
-corrplot(corr, method="square", order = "PCA")
-corrplot(corr, method="ellipse", order = "PCA")
-corrplot(corr, method="shade", order = "PCA")
-corrplot(corr, method="pie", order = "PCA")
+corrplot(M, method="number", col="black", addcolorlabel="no")
+corrplot(M, method="number")
+corrplot(M,)
+corrplot(M, order ="AOE")
+corrplot(M, method="color", order = "AOE", addCoef.col=grey(0.1))
+corrplot(M, method="square", order = "AOE")
+corrplot(M, method="ellipse", order = "AOE")
+corrplot(M, method="shade", order = "AOE")
+corrplot(M, method="pie", order = "AOE")
 
 
-## mixed methods
-corrplot(corr,order="PCA",type="upper",addtextlabel="no")
-corrplot(corr,add=TRUE, type="lower",
-	method="ell",order="PCA",addtextlabel="d")
+## mixed methods: It's more efficient if using function "corrplot.mixed"
+## circle + ellipse
+corrplot(M,order="AOE",type="upper",addtextlabel="d")
+corrplot(M,add=TRUE, type="lower", method="ell",order="AOE",
+	diag=FALSE,addtextlabel="no", addcolorlabel="no")
+	
+## circle + square
+corrplot(M,order="AOE",type="upper",addtextlabel="d")
+corrplot(M,add=TRUE, type="lower", method="square",order="AOE",
+	diag=FALSE,addtextlabel="no", addcolorlabel="no")
 
-corrplot(corr,order="PCA",type="upper",addtextlabel="no")
-corrplot(corr,add=TRUE, type="lower",
-	method="square",order="PCA",addtextlabel="d")
+## circle + colorful number
+corrplot(M,order="AOE",type="upper",addtextlabel="d")
+corrplot(M,add=TRUE, type="lower", method="number",order="AOE",
+	diag=FALSE,addtextlabel="no", addcolorlabel="no")
 
+## circle + black number
+corrplot(M,order="AOE",type="upper",addtextlabel="tp")
+corrplot(M,add=TRUE, type="lower", method="number",order="AOE", col="black",
+	diag=FALSE,addtextlabel="no", addcolorlabel="no")
 
+	
 ## order is hclust and draw rectangles
-corrplot(corr, order="hclust")
-corrplot(corr, order="hclust", addrect = 2)
-corrplot(corr, order="hclust", addrect = 3, rect.col = "red")
-corrplot(corr, order="hclust", addrect = 4, rect.col = "blue")
-corrplot(corr, order="hclust", hclust.method="ward", addrect = 4)
+corrplot(M, order="hclust")
+corrplot(M, order="hclust", addrect = 2)
+corrplot(M, order="hclust", addrect = 3, rect.col = "red")
+corrplot(M, order="hclust", addrect = 4, rect.col = "blue")
+corrplot(M, order="hclust", hclust.method="ward", addrect = 4)
 
 ##  color of matrix
 col1 <- colorRampPalette(rev(c("#00007F", "blue", "#007FFF", "cyan",
@@ -369,63 +367,54 @@ col2 <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7"
 col3 <- colorRampPalette(c("red", "white", "blue"))			
 wb <- c("white","black")
 ## col1 
-corrplot(corr, order="PCA", col=col1(200))
-corrplot(corr, order="PCA", col=col1(20), cl.length=21)
-corrplot(corr, order="PCA", col=col1(10))
-corrplot(corr, order="PCA", col=col1(8))
+corrplot(M, order="AOE", col=col1(200))
+corrplot(M, order="AOE", col=col1(20), cl.length=21)
+corrplot(M, order="AOE", col=col1(10))
+corrplot(M, order="AOE", col=col1(8))
 ## col2
-corrplot(corr, order="PCA", col=col2(200))
-corrplot(corr, order="PCA", col=col2(10))
-corrplot(corr, order="PCA", col=col2(8))
+corrplot(M, order="AOE", col=col2(200))
+corrplot(M, order="AOE", col=col2(10))
+corrplot(M, order="AOE", col=col2(8))
 ## col3
-corrplot(corr, order="PCA", col=col3(100))
-corrplot(corr, order="PCA", col=col3(10))
+corrplot(M, order="AOE", col=col3(100))
+corrplot(M, order="AOE", col=col3(10))
 ## col=wb
-corrplot(corr, col = wb, order="PCA", outline=TRUE, addcolorlabel="no")
+corrplot(M, col = wb, order="AOE", outline=TRUE, addcolorlabel="no")
 ## like Chinese wiqi, suit for either on screen or white-black print.
-corrplot(corr, col = wb, bg="gold2",  order="PCA", addcolorlabel="no")
+corrplot(M, col = wb, bg="gold2",  order="AOE", addcolorlabel="no")
 
 
 ## visualize a similarrity matrix in [0, 1]
-corrplot(abs(corr),order="PCA",assign.col="0to1")
-corrplot(abs(corr),order="PCA",assign.col="0to1", col=col1(20)[11:20])
-corrplot(abs(corr),order="PCA",assign.col="0to1", col=col3(200)[101:200])
+corrplot(abs(M),order="AOE",assign.col="0to1")
+corrplot(abs(M),order="AOE",assign.col="0to1", col=col1(20)[11:20])
+corrplot(abs(M),order="AOE",assign.col="0to1", col=col3(200)[101:200])
 
 ## text-labels and plot type
-corrplot(corr, order="PCA", tl.srt=45)
-corrplot(corr, order="PCA", tl.srt=60)
-corrplot(corr, order="PCA", addtextlabel="d",addcolorlabel="no")
-corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d")
-corrplot(corr, order="PCA", diag=FALSE, addtextlabel="d",cl.range="min2max")
-corrplot(corr, order="PCA", type="upper")
-corrplot(corr, order="PCA", type="upper", diag=FALSE)
-corrplot(corr, order="PCA", type="lower", addcolorlabel="b")
-corrplot(corr, order="PCA", type="lower", addcolorlabel="b", diag=FALSE)
+corrplot(M, order="AOE", tl.srt=45)
+corrplot(M, order="AOE", tl.srt=60)
+corrplot(M, order="AOE", addtextlabel="d",addcolorlabel="no")
+corrplot(M, order="AOE", diag=FALSE, addtextlabel="d")
+corrplot(M, order="AOE", diag=FALSE, addtextlabel="d",cl.range="min2max")
+corrplot(M, order="AOE", type="upper")
+corrplot(M, order="AOE", type="upper", diag=FALSE)
+corrplot(M, order="AOE", type="lower", addcolorlabel="b")
+corrplot(M, order="AOE", type="lower", addcolorlabel="b", diag=FALSE)
 
 
 
 #### color-legend
-corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="l")
-corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="c")
-corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="r")
-corrplot(corr, order="PCA", addcolorlabel="bottom")
-corrplot(corr, order="PCA", addcolorlabel="bottom", cl.range="min2max", addtextlabel="d")
-corrplot(corr, order="PCA", addcolorlabel="no")
+corrplot(M, order="AOE", cl.ratio=0.2, cl.align="l")
+corrplot(M, order="AOE", cl.ratio=0.2, cl.align="c")
+corrplot(M, order="AOE", cl.ratio=0.2, cl.align="r")
+corrplot(M, order="AOE", addcolorlabel="bottom")
+corrplot(M, order="AOE", addcolorlabel="bottom", cl.range="min2max", addtextlabel="d")
+corrplot(M, order="AOE", addcolorlabel="no")
 
-
-
-## addshade, addgrid and addCoef
-corrplot.shade(corr, order="PCA", addshade = "negative", addgrid.col=NULL)
-corrplot.shade(corr, order="PCA", addshade = "positive", addgrid.col=NULL)
-corrplot.shade(corr, order="PCA", addshade = "all", addgrid.col=NULL)
-corrplot.color(corr, order="PCA", addgrid.col=NULL)
-corrplot.color(corr, order="PCA", addgrid.col="white")
-corrplot.color(corr, order="PCA", addgrid.col="white", addCoef.col="grey10")
 
 
 ##the input matrix is not square
-corrplot(corr[1:8,])
-corrplot(corr[,1:8])
+corrplot(M[1:8,])
+corrplot(M[,1:8])
 
 
 
@@ -451,42 +440,42 @@ res2 <- cor.mtest(mtcars,0.99)
 
 
 ## specialized the insignificant value according to the significant level
-corrplot(corr, p.mat = res1[[1]], sig.level=0.2)
-corrplot(corr, p.mat = res1[[1]], sig.level=0.05)
-corrplot(corr, p.mat = res1[[1]], sig.level=0.01)
-corrplot(corr, p.mat = res1[[1]], insig = "blank")
-corrplot(corr, p.mat = res1[[1]], order="hclust", insig = "blank", addrect=3)
-corrplot(corr, p.mat = res1[[1]], order="hclust", insig = "pch", addrect=3)
+corrplot(M, p.mat = res1[[1]], sig.level=0.2)
+corrplot(M, p.mat = res1[[1]], sig.level=0.05)
+corrplot(M, p.mat = res1[[1]], sig.level=0.01)
+corrplot(M, p.mat = res1[[1]], insig = "blank")
+corrplot(M, p.mat = res1[[1]], order="hclust", insig = "blank", addrect=3)
+corrplot(M, p.mat = res1[[1]], order="hclust", insig = "pch", addrect=3)
 
 
 
 ## plot confidence interval(0.95), "square" method	
-corrplot(corr,low=res1[[2]], upp=res1[[3]],
+corrplot(M,low=res1[[2]], upp=res1[[3]],
 	plotC="circle", addg="grey20",addc="no")
-corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
+corrplot(M, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
 	plotC="circle", addg="grey20",addc="no")
-corrplot(corr, low=res1[[2]], upp=res1[[3]], 
-	col=c("white","black"),bg="gold2",order="PCA",
+corrplot(M, low=res1[[2]], upp=res1[[3]], 
+	col=c("white","black"),bg="gold2",order="AOE",
 	plotCI="circle",addc="no",pch.col="red")
-corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], 
-	col=c("white","black"),bg="gold2",order="PCA",
+corrplot(M, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], 
+	col=c("white","black"),bg="gold2",order="AOE",
 	plotCI="circle",addc="no",pch.col="red")
 	
 ## plot confidence interval(0.95), "square" method	
-corrplot(corr, low=res1[[2]], upp=res1[[3]],
-	col=c("white","black"),bg="gold2", order="PCA",
+corrplot(M, low=res1[[2]], upp=res1[[3]],
+	col=c("white","black"),bg="gold2", order="AOE",
 	plotCI="square",addg=NULL,addc="no")
-corrplot(corr, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
-	col=c("white","black"),bg="gold2",order="PCA",pch.col="red", 
+corrplot(M, p.mat = res1[[1]],low=res1[[2]], upp=res1[[3]],
+	col=c("white","black"),bg="gold2",order="AOE",pch.col="red", 
 	plotC="square", addg=NULL,addc="no")
 	
 ## plot confidence interval(0.95, 0.95, 0.99), "rect" method
-corrplot(corr, low=res1[[2]], upp=res1[[3]], order="hclust",
+corrplot(M, low=res1[[2]], upp=res1[[3]], order="hclust",
 	rect.col="navy", plotC="rect",addc="no")
-corrplot(corr, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], order="hclust",
+corrplot(M, p.mat = res1[[1]], low=res1[[2]], upp=res1[[3]], order="hclust",
 	pch.col="red", sig.level = 0.05, addrect=3, rect.col="navy",
 	plotC="rect",addc="no")
-corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
+corrplot(M, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
 	pch.col="red", sig.level = 0.01, addrect=3, rect.col="navy",
 	plotC="rect",addc="no")
 
@@ -495,7 +484,7 @@ corrplot(corr, p.mat = res2[[1]], low=res2[[2]], upp=res2[[3]], order="hclust",
 par(ask=FALSE)
 for(i in seq(0.1, 0.001, -0.001)){
 	tmp <- cor.mtest(mtcars,1-i)
-	corrplot(corr, p.mat = tmp[[1]], low=tmp[[2]], upp=tmp[[3]], order="hclust",
+	corrplot(M, p.mat = tmp[[1]], low=tmp[[2]], upp=tmp[[3]], order="hclust",
 		pch.col="red", sig.level = i, plotC="rect", addc="no",
 		mar=c(0,0,1,0), 
 		title=substitute(alpha == x,list(x=format(i,digits=3,nsmall=3))))
