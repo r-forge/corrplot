@@ -1,8 +1,8 @@
 Package: corrplot
 Type: Package
 Title: visualization of a correlation matrix
-Version: 0.50
-Date: 2011-12-01
+Version: 0.54
+Date: 2011-12-02
 Author: Taiyun Wei
 Suggests: seriation, Cairo 
 Maintainer: Taiyun Wei <weitaiyun@gmail.com>

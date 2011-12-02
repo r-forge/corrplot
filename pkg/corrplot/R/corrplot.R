@@ -8,7 +8,7 @@ corrplot <- function(corr,
 		col = NULL, assign.col = c("-1to1","min2max","0to1"),
 		bg = "white", title = "",
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
-		addgrid.col = "gray", addnum.col= NULL,
+		addgrid.col = "gray", addCoef.col= NULL,
 
 		order = c("original", "PCA", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
@@ -48,9 +48,14 @@ corrplot <- function(corr,
 	if(min(corr) < -1 - .Machine$double.eps|| max(corr) > 1 + .Machine$double.eps)
 		stop("The number in matrix should be in [-1, 1]!")
 		
-	if(is.null(col))
-		col <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
-			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))(200)	
+	if(is.null(col)){	
+		ifelse(assign.col!="0to1",
+			col <- c("#67001F", "#B51F2E", "#DC6F58", "#F7B799", "#FDEBDF",
+				"#E5F0F6", "#A7CFE4", "#549EC9", "#246BAE", "#053061"),
+			col <- c("#F2F8FB", "#DAEAF3", "#BDDAEA", "#9BCAE0", "#74B2D4", 
+				"#4B98C5", "#3480B9", "#2268AD", "#134C88", "#053061")
+		)
+	}		
 	n <- nrow(corr)
 	m <- ncol(corr)
 	min.nm <- min(n,m)
@@ -123,8 +128,10 @@ corrplot <- function(corr,
 
 	if(assign.col=="-1to1")   newcorr <- (DAT + 1)/2
 	if(assign.col=="min2max") newcorr <- (DAT-min(DAT))/(diff(range(DAT)))
-	if(assign.col=="0to1")	if(any(DAT<0)) stop("There are negative numbers!")
-	
+	if(assign.col=="0to1"){	
+		newcorr <- DAT
+		if(any(DAT<0)) stop("There are negative numbers!")
+	}
 	newcorr[newcorr==0] <- 1e-5
 	col.fill <- col[ceiling(newcorr*length(col))]
 	
@@ -448,8 +455,8 @@ corrplot <- function(corr,
 	title(title, ...)
    
 	## add numbers
-	if(!is.null(addnum.col)&(!method == "number")){
-		text(Pos[,1], Pos[,2], round(100 * DAT), col = addnum.col)
+	if(!is.null(addCoef.col)&(!method == "number")){
+		text(Pos[,1], Pos[,2], round(100 * DAT), col = addCoef.col)
 	}
 
 	if(type=="full"&plotCI=="no"&!is.null(addgrid.col))

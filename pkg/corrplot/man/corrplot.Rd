@@ -30,7 +30,7 @@ corrplot(corr,
 		col = NULL, assign.col = c("-1to1","min2max","0to1"),
 		bg = "white", title = "",
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
-		addgrid.col = "gray", addnum.col= NULL,
+		addgrid.col = "gray", addCoef.col= NULL,
 
 		order = c("original", "PCA", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
@@ -118,7 +118,7 @@ the color of grid, if \code{NULL}, don't add grid.
 }
 
 
-  \item{addnum.col}{
+  \item{addCoef.col}{
 color of coefficients added on the glyph circle, square, etc. if \code{NULL} (default), add no coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
 }
 
@@ -337,7 +337,7 @@ corrplot(corr, method="number", col="black", addcolorlabel="no")
 corrplot(corr, method="number")
 corrplot(corr)
 corrplot(corr, order ="PCA")
-corrplot(corr, method="color", order = "PCA", addnum.col=grey(0.1))
+corrplot(corr, method="color", order = "PCA", addCoef.col=grey(0.1))
 corrplot(corr, method="square", order = "PCA")
 corrplot(corr, method="ellipse", order = "PCA")
 corrplot(corr, method="shade", order = "PCA")
@@ -368,13 +368,13 @@ col2 <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7"
 			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))	
 col3 <- colorRampPalette(c("red", "white", "blue"))			
 wb <- c("white","black")
-## col1
-corrplot(corr, order="PCA", col=col1(15), cl.length=16)
-corrplot(corr, order="PCA", col=col1(9))
-corrplot(corr, order="PCA", col=col1(6))
-corrplot(corr, order="PCA", col=col1(4))
+## col1 
+corrplot(corr, order="PCA", col=col1(200))
+corrplot(corr, order="PCA", col=col1(20), cl.length=21)
+corrplot(corr, order="PCA", col=col1(10))
+corrplot(corr, order="PCA", col=col1(8))
 ## col2
-corrplot(corr, order="PCA", col=col2(20))
+corrplot(corr, order="PCA", col=col2(200))
 corrplot(corr, order="PCA", col=col2(10))
 corrplot(corr, order="PCA", col=col2(8))
 ## col3
@@ -386,6 +386,10 @@ corrplot(corr, col = wb, order="PCA", outline=TRUE, addcolorlabel="no")
 corrplot(corr, col = wb, bg="gold2",  order="PCA", addcolorlabel="no")
 
 
+## visualize a similarrity matrix in [0, 1]
+corrplot(abs(corr),order="PCA",assign.col="0to1")
+corrplot(abs(corr),order="PCA",assign.col="0to1", col=col1(20)[11:20])
+corrplot(abs(corr),order="PCA",assign.col="0to1", col=col3(200)[101:200])
 
 ## text-labels and plot type
 corrplot(corr, order="PCA", tl.srt=45)
@@ -401,22 +405,22 @@ corrplot(corr, order="PCA", type="lower", addcolorlabel="b", diag=FALSE)
 
 
 #### color-legend
-corrplot(corr, order="PCA", cl.ratio=0.1, cl.align="r", cl.offset=0)
-corrplot(corr, order="PCA", cl.ratio=0.15, cl.length=9)
 corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="l")
+corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="c")
+corrplot(corr, order="PCA", cl.ratio=0.2, cl.align="r")
 corrplot(corr, order="PCA", addcolorlabel="bottom")
 corrplot(corr, order="PCA", addcolorlabel="bottom", cl.range="min2max", addtextlabel="d")
 corrplot(corr, order="PCA", addcolorlabel="no")
 
 
 
-## addshade, addgrid and addnum
+## addshade, addgrid and addCoef
 corrplot.shade(corr, order="PCA", addshade = "negative", addgrid.col=NULL)
 corrplot.shade(corr, order="PCA", addshade = "positive", addgrid.col=NULL)
 corrplot.shade(corr, order="PCA", addshade = "all", addgrid.col=NULL)
 corrplot.color(corr, order="PCA", addgrid.col=NULL)
 corrplot.color(corr, order="PCA", addgrid.col="white")
-corrplot.color(corr, order="PCA", addgrid.col="white", addnum.col="grey10")
+corrplot.color(corr, order="PCA", addgrid.col="white", addCoef.col="grey10")
 
 
 ##the input matrix is not square
