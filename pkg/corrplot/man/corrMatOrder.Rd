@@ -21,7 +21,7 @@ Correlation matrix to reorder.
 }
 
   \item{order}{
-Character, the ordering method of the correlation matrix. 
+Character, the ordering method for the correlation matrix. 
 	\itemize{
 		\item \code{"original"} for original order.
 		\item \code{"AOE"} for the angular order of the eigenvectors. It is calculated from the order of the angles, \eqn{a_i}:
@@ -45,7 +45,7 @@ Returns a single permutation vector.
 }
 
 \seealso{
-Package \code{seriation} offered more methods to reorder matrices, such as 
+Package \code{seriation} offers more methods to reorder matrices, such as 
 ARSA, BBURCG, BBWRCG, MDS, TSP, Chen and so forth.
 }
 
