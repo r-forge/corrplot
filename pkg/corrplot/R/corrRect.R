@@ -1,4 +1,4 @@
-corr.rect <- function(clus, col = "black", lwd = 2){
+corrRect <- function(clus, col = "black", lwd = 2){
 	hc <- length(clus)
 	cu <- c(0, cumsum(clus))
 	mat <- cbind(cu[-(hc + 1)] + 0.5, sum(clus) - cu[-(hc + 1)] + 0.5, 

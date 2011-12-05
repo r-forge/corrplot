@@ -9,32 +9,28 @@ A visualization of a correlation matrix.
 A graphical display of a correlation matrix, confidence interval. 
 The details of graph are paid great attention to.
 
-\code{corrplot.circle}, \code{corrplot.square}, \code{corrplot.ellipse},
-\code{corrplot.number},
-\code{corrplot.pie}, \code{corrplot.shade}, and \code{corrplot.color} are
-convenience wrappers of \code{corrplot} that take the same arguments as the
-corresponding option it replaces such as circle, ellipse etc.
+It can also visualize a general matrix if using parameter \code{zoom} to scale matrix.
 }
 
 \usage{
 corrplot(corr,
 		method = c("circle", "square", "ellipse", "number", "shade", "color", "pie"),
 		type = c("full", "lower", "upper"), add = FALSE,
-		col = NULL, assign.col = c("-1to1","min2max","0to1"),
-		bg = "white", title = "",
+		col = NULL, bg = "white", title = "",  zoom = 1,
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
-		addgrid.col = "gray", addCoef.col= NULL,
+		addgrid.col = "gray", addCoef.col= NULL, addCoefasPercent = TRUE, 
 
 		order = c("original", "AOE", "FPC", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
 							"mcquitty", "median", "centroid"),
-		addrect = NULL, rect.col="black", rect.lwd = 2,
+		addrect = NULL, rect.col = "black", rect.lwd = 2,
 
 		addtextlabel = NULL, tl.cex = 1,
 		tl.col = "red", tl.offset = 0.4, tl.srt = 90,
 
-		addcolorlabel = c("right", "bottom","no"), cl.range=NULL,
-		cl.length=11, cl.cex =0.8, cl.ratio = 0.15, cl.align.text="c",cl.offset=0.5,
+		addcolorlabel = c("right", "bottom","no"), cl.lim = c(-1, 1),
+		cl.length = NULL, cl.cex = 0.8, cl.ratio = 0.15, 
+		cl.align.text = "c",cl.offset = 0.5,
 
 		addshade = c("negative", "positive", "all"),
 		shade.lwd = 1, shade.col = "white",
@@ -49,161 +45,172 @@ corrplot(corr,
 
 \arguments{
   \item{corr}{
-the correlation matrix, must be square if \code{order} is not \code{"original"}.
+The correlation matrix to visualize, must be square if \code{order} is not \code{"original"}.
+For general matrix, please use \code{zoom} to convert.
 }
   \item{method}{
-character, the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"} (default), \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. 
+Character, the visualization method of correlation matrix to be used. Currently, it supports seven methods, named \code{"circle"} (default), \code{"square"}, \code{"ellipse"}, \code{"number"}, \code{"pie"}, \code{"shade"} and \code{"color"}. See examples for details.
 
-The areas of circles or squares show the absolute value of corresponding correlation coefficients. Method \code{"pie"} and \code{"shade"} came from Michael Friendly's job (with some adjustment 
-about the shade added on), and \code{"ellipse"} came from D.J. Murdoch and E.D. Chow's job, see in section References.
+The areas of circles or squares show the absolute value of corresponding correlation 
+coefficients. Method \code{"pie"} and \code{"shade"} came from Michael Friendly's 
+job (with some adjustment about the shade added on), and \code{"ellipse"} came from 
+D.J. Murdoch and E.D. Chow's job, see in section References.
 }
   \item{type}{
-character, \code{"full"} (default), \code{"upper"} or \code{"lower"}, display full matrix,
-lower triangular or upper triangular of it.
+Character, \code{"full"} (default), \code{"upper"} or \code{"lower"}, display full matrix,
+lower triangular or upper triangular matrix.
 }
 
   \item{add}{
-  logical, if add is TRUE, the graph are added to an existing plot, otherwise a new plot is created.
+Logical, if \code{TRUE}, the graph is added to an existing plot, otherwise a new plot is created.
 }
 
   \item{col}{
-vector, the color of glyphs for correlation coefficients or confidence interval's bounds, 
-and it is distributed uniformly according \code{"assign.col"} parameter. 
+Vector, the color of glyphs.
+It is distributed uniformly in [-1, 1] (after zoom). 
+
+If NULL, \code{col} will be \code{colorRampPalette(col2)(200)}, see example about col2.
 }
  
-  \item{assign.col}{
-character, \code{"-1to1"} (default), \code{"min2max"} or \code{"0to1"}, the method of how to
-assign colors to the elements in the input matrix. See details in the examples.
-}
 
   \item{bg}{
-the background color.
+The background color.
 }
 
   \item{title}{
-character, title of the graph.
+Character, title of the graph.
+}
+
+  \item{zoom}{
+Numeric, zoom for matrix \code{corr}: \code{corr <- corr * zoom}.
+
+If the input matrix is not a correlation matrix in [-1, 1], 
+then we can specify \code{zoom} to make the input matrix in [-1,1] and use corrplot() to
+visualize it. 
+
+Warning: you should make sure the visualization you take after data zoom is meaningful.
+
 }
 
 
   \item{diag}{
-logical, whether display the correlation coefficients on the principal diagonal.
+Logical, whether display the correlation coefficients on the principal diagonal.
 }
 
   \item{outline}{
-logical, whether plot outline of circles, square and ellipse.
+Logical, whether plot outline of circles, square and ellipse.
 }
 
   \item{mar}{
-see \code{\link{par}}.
+See \code{\link{par}}.
 }
 
 
   \item{addgrid.col}{
-the color of grid, if \code{NULL}, don't add grid.
+The color of grid, if \code{NULL}, don't add grid.
 }
 
 
   \item{addCoef.col}{
-color of coefficients added on the glyph circle, square, etc. if \code{NULL} (default), add no coefficients. Note: the figures are expressed in terms of a percentage for spacesaving.
+Color of coefficients added on the graph. If \code{NULL} (default), add no coefficients. 
 }
 
+  \item{addCoefasPercent}{
+Logic, whether translate coefficients into percentage style for spacesaving. 
+}
+
+
   \item{order}{
-character, the ordering method of the correlation matrix. 
+Character, the ordering method of the correlation matrix. 
 	\itemize{
 		\item \code{"original"} for original order.
-		\item \code{"AOE"} for the angular order of the eigenvectors. See Michael Friendly (2002) for details.
+		\item \code{"AOE"} for the angular order of the eigenvectors. 
 		\item \code{"FPC"} for the first principal component order.
 		\item \code{"hclust"} for hierarchical clustering order.
 		\item \code{"alphabet"} for alphabetical order.
 	}
 
-See function \code{\link{corrMatOrder}}.
+See function \code{\link{corrMatOrder}} for details.
 }
 
   \item{hclust.method}{
-character, the agglomeration method to be used when \code{order} is \code{\link{hclust}}. This should be one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
+Character, the agglomeration method to be used when \code{order} is \code{\link{hclust}}. This should be one of \code{"ward"}, \code{"single"}, \code{"complete"}, \code{"average"}, \code{"mcquitty"}, \code{"median"} or \code{"centroid"}.
 }
 
   \item{addrect}{
-integer, the number of rectangles draws on the graph according to the hierarchical cluster,
-only valid when \code{order} is \code{hclust}. If its value is \code{NULL} (default), then
+Integer, the number of rectangles draws on the graph according to the hierarchical cluster,
+only valid when \code{order} is \code{hclust}. If \code{NULL} (default), then
 add no rectangles.
 }
 
   \item{rect.col}{
-color for rectangle border(s), only valid when \code{addrect} is not \code{NULL}.
+Color for rectangle border(s), only valid when \code{addrect} is not \code{NULL}.
 }
 
-
   \item{rect.lwd}{
-numeric, line width for borders for rectangle border(s), only valid
-when \code{addrect} is not \code{NULL}.
-
-
+Numeric, line width for borders for rectangle border(s), only valid
+when \code{addrect} is equal greater than 1.
 }
 
 
 
   \item{addtextlabel}{
-character, \code{"lt"}, \code{"ld"}, \code{"td"}, or \code{"d"}, giving position of 
-text labels, \code{"lt"} means left and top, \code{"ld"} means left and diagonal(near), 
-\code{"td"} means top and diagonal(near), \code{"d"} means diagonal. If \code{"no"},
-do not add textlabel.
+Character, \code{"lt"}, \code{"ld"}, \code{"td"}, \code{"d"} or \code{"no"}, giving position of 
+text labels; \code{"lt"} means left and top, \code{"ld"} means left and diagonal, 
+\code{"td"} means top and diagonal(near), \code{"d"} means diagonal, \code{"no"} means
+don't add textlabel.
 }
 
   \item{tl.cex}{
-numeric, for the text label (variable names).
+Numeric, for the size of text label (variable names).
 }
 
   \item{tl.col}{
-the color of text label.
+The color of text label.
 }
 
   \item{tl.offset}{
-numeric, for text label, see \code{\link{text}}.
+Numeric, for text label, see \code{\link{text}}.
 }
 
   \item{tl.srt}{
-numeric, for text label string rotation in degrees, see \code{\link{text}}.
+Numeric, for text label string rotation in degrees, see \code{\link{text}}.
 }
-
-
 
   \item{addcolorlabel}{
-character, \code{"right"} (default), \code{"bottom"} or \code{"no"}, where to draw colorlabel. 
+Character, \code{"right"} (default), \code{"bottom"} or \code{"no"}, where to draw colorlabel. 
 If \code{"no"}, don't draw colorlabel.
 }
-  \item{cl.range}{
-character, \code{"-1to1"}, \code{"min2max"}, or \code{"0to1"} style of colorlabel. 
-The default value is the same with \code{"assign.col"}.
-See details in the examples.
+
+  \item{cl.lim}{
+The  limits \code{(x1, x2)} (after zoom) in the colorlabel.
 }
 
 \item{cl.length}{
-integer, the number of number-text in colorlabel, passed to \code{\link{colorlegend}}.
+Integer, the number of number-text in colorlabel, passed to \code{\link{colorlegend}}.
+If \code{NULL}, \code{cl.length} is \code{length(col) + 1} when \code{length(col) <=20};
+\code{cl.length} is 11 when \code{length(col) > 20}
 }
 
 \item{cl.cex}{
-cex of number-label in colorlabel,  passed to \code{\link{colorlegend}}.
+Numeric, cex of number-label in colorlabel,  passed to \code{\link{colorlegend}}.
 }
 
 \item{cl.ratio}{
-numeric, to justify the width of colorlabel, 0.1~0.2 is suggested.
+Numeric, to justify the width of colorlabel, 0.1~0.2 is suggested.
 }
 
 \item{cl.align.text}{
-character, \code{"l"}, \code{"c"} (default) or \code{"r"}, for number-label in colorlabel, 
+Character, \code{"l"}, \code{"c"} (default) or \code{"r"}, for number-label in colorlabel, 
 \code{"l"} means left, \code{"c"} means center, and \code{"r"} means right.
 }
 
 \item{cl.offset}{
-numeric, for number-label in colorlabel, see \code{\link{text}}.
+Numeric, for number-label in colorlabel, see \code{\link{text}}.
 }
 
-
-
   \item{addshade}{
-character for shade style, \code{"negative"}, \code{"positive"} or \code{"all"}, 
+Character for shade style, \code{"negative"}, \code{"positive"} or \code{"all"}, 
 only valid when \code{method} is \code{"shade"}. If \code{"all"}, all
 correlation coefficients' glyph will be shaded; if \code{"positive"}, 
 only the positive will be shaded; if \code{"negative"}, only the negative 
@@ -212,63 +219,63 @@ will be shaded. Note: the angle of shade line is different,
 }
 
   \item{shade.lwd}{
-numeric, the line width of shade.
+Numeric, the line width of shade.
 }
+
   \item{shade.col}{
-the color of shade line.
+The color of shade line.
 }
-
-
 
   \item{p.mat}{
-matrix of p-value, if \code{NULL}, arguments \code{sig.level}, \code{insig}, 
+Matrix of p-value, if \code{NULL}, arguments \code{sig.level}, \code{insig}, 
 \code{pch}, \code{pch.col}, \code{pch.cex} is invalid.
 }
 
   \item{sig.level}{
-significant level,  if the p-value in \code{p-mat} is bigger than \code{sig.level}, then
+Significant level,  if the p-value in \code{p-mat} is bigger than \code{sig.level}, then
 the corresponding correlation coefficient is regarded as insignificant.
 }
 
   \item{insig}{
-character, specialized insignificant correlation coefficients, \code{"pch"} (default), \code{"blank"}
-or \code{"no"}. If \code{"blank"}, wipe away the corresponding glyphs; if \code{"pch"}, 
-add characters (see \code{pch} for details) on 
-corresponding glyphs; if \code{"no"}, don't take any measures.
+Character, specialized insignificant correlation coefficients, 
+\code{"pch"} (default), \code{"blank"} or \code{"no"}. 
+If \code{"blank"}, wipe away the corresponding glyphs; 
+if \code{"pch"}, add characters (see \code{pch} for details) on corresponding glyphs; 
+if \code{"no"}, don't take any measures.
 }
+
   \item{pch}{
-add character on the glyphs of insignificant correlation coefficients(only valid when 
+Add character on the glyphs of insignificant correlation coefficients(only valid when 
 \code{insig} is \code{"pch"}). See \code{\link{par}}.
 }
+
   \item{pch.col}{
-the color of pch (only valid when \code{insig} is \code{"pch"}).
+The color of pch (only valid when \code{insig} is \code{"pch"}).
 }
+
   \item{pch.cex}{
-the cex of pch (only valid when \code{insig} is \code{"pch"}).
-
-
+The cex of pch (only valid when \code{insig} is \code{"pch"}).
 }
 
 
   \item{plotCI}{
-character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval. 
+Character, method to plot confidence interval, if \code{"no"}, don't plot confidence interval. 
 If \code{"rect"}, plot rectangles whose upper side means upper bound, lower side means 
 lower bound, and correlation coefficients are also added on the rectangles. If \code{"circle"}, first plot a circle of the bigger absolute bound, then plot the smaller. Warning: if the 
 two bounds are the same sign, then the smaller circle will be wiped away, thus formed a ring. Method \code{"square"} is similar to \code{"circle"}. 
-
 }
+
   \item{lowCI.mat}{
-matrix of the lower bound of confidence interval.
+Matrix of the lower bound of confidence interval.
 }
+
   \item{uppCI.mat}{
-matrix of the upper bound of confidence interval.
-
-
+Matrix of the upper bound of confidence interval.
 }
 
 
   \item{\dots}{
-additional arguments passing to function \code{text} for drawing text lable.
+Additional arguments passing to function \code{text} for drawing text lable.
 }
 
 }
@@ -316,18 +323,49 @@ ARSA, BBURCG, BBWRCG, MDS, TSP, Chen and so forth.
 
 data(mtcars)
 M <- cor(mtcars)
+##  different color series
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", 
+			"cyan", "#007FFF", "blue","#00007F"))
+col2 <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
+			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))	
+col3 <- colorRampPalette(c("red", "white", "blue"))	
+col4 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","#7FFF7F", 
+			"cyan", "#007FFF", "blue","#00007F"))	
+wb <- c("white","black")
+
+
 par(ask = TRUE)
 
-## different methods to display corr-matrix
+
+## different color scale and methods to display corr-matrix
 corrplot(M, method="number", col="black", addcolorlabel="no")
 corrplot(M, method="number")
-corrplot(M,)
+corrplot(M)
 corrplot(M, order ="AOE")
-corrplot(M, method="color", order = "AOE", addCoef.col=grey(0.1))
-corrplot(M, method="square", order = "AOE")
-corrplot(M, method="ellipse", order = "AOE")
-corrplot(M, method="shade", order = "AOE")
+corrplot(M, order ="AOE", addCoef.col="grey")
+
+corrplot(M, order="AOE", col=col1(20), cl.length=21,addCoef.col="grey")
+corrplot(M, order="AOE", col=col1(10),addCoef.col="grey")
+
+corrplot(M, order="AOE", col=col2(200))
+corrplot(M, order="AOE", col=col2(200),addCoef.col="grey")
+corrplot(M, order="AOE", col=col2(20), cl.length=21,addCoef.col="grey")
+corrplot(M, order="AOE", col=col2(10),addCoef.col="grey")
+
+corrplot(M, order="AOE", col=col3(100))
+corrplot(M, order="AOE", col=col3(10))
+
+
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+corrplot(M, method="square", col=col2(200),order = "AOE")
+corrplot(M, method="ellipse", col=col1(200),order = "AOE")
+corrplot(M, method="shade", col=col3(20),order = "AOE")
 corrplot(M, method="pie", order = "AOE")
+
+## col=wb
+corrplot(M, col = wb, order="AOE", outline=TRUE, addcolorlabel="no")
+## like Chinese wiqi, suit for either on screen or white-black print.
+corrplot(M, col = wb, bg="gold2",  order="AOE", addcolorlabel="no")
 
 
 ## mixed methods: It's more efficient if using function "corrplot.mixed"
@@ -359,42 +397,26 @@ corrplot(M, order="hclust", addrect = 3, rect.col = "red")
 corrplot(M, order="hclust", addrect = 4, rect.col = "blue")
 corrplot(M, order="hclust", hclust.method="ward", addrect = 4)
 
-##  color of matrix
-col1 <- colorRampPalette(rev(c("#00007F", "blue", "#007FFF", "cyan",
-            "white", "yellow", "#FF7F00", "red", "#7F0000")))
-col2 <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
-			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))	
-col3 <- colorRampPalette(c("red", "white", "blue"))			
-wb <- c("white","black")
-## col1 
-corrplot(M, order="AOE", col=col1(200))
-corrplot(M, order="AOE", col=col1(20), cl.length=21)
-corrplot(M, order="AOE", col=col1(10))
-corrplot(M, order="AOE", col=col1(8))
-## col2
-corrplot(M, order="AOE", col=col2(200))
-corrplot(M, order="AOE", col=col2(10))
-corrplot(M, order="AOE", col=col2(8))
-## col3
-corrplot(M, order="AOE", col=col3(100))
-corrplot(M, order="AOE", col=col3(10))
-## col=wb
-corrplot(M, col = wb, order="AOE", outline=TRUE, addcolorlabel="no")
-## like Chinese wiqi, suit for either on screen or white-black print.
-corrplot(M, col = wb, bg="gold2",  order="AOE", addcolorlabel="no")
 
 
-## visualize a similarrity matrix in [0, 1]
-corrplot(abs(M),order="AOE",assign.col="0to1")
-corrplot(abs(M),order="AOE",assign.col="0to1", col=col1(20)[11:20])
-corrplot(abs(M),order="AOE",assign.col="0to1", col=col3(200)[101:200])
+## visualize a  matrix in [0, 1]
+corrplot(abs(M),order="AOE", cl.lim=c(0,1))
+corrplot(abs(M),order="AOE", col=col1(20), cl.lim=c(0,1))
+corrplot(abs(M),order="AOE", col=col3(200), cl.lim=c(0,1))
+
+## visualize a  matrix in [0, 6]
+corrplot(6*abs(M),order="AOE", zoom=1/6, col=col3(200), cl.lim=c(0,1))
+
+## visualize a  matrix in [-6, 6]
+corrplot(6*M, order="AOE", zoom=1/6,col=col3(200))
+corrplot(round(6*M,1), order="AOE", zoom=1/6,col=col3(200), 
+		addCoef.col="grey", addCoefasPercent=FALSE)
 
 ## text-labels and plot type
 corrplot(M, order="AOE", tl.srt=45)
 corrplot(M, order="AOE", tl.srt=60)
 corrplot(M, order="AOE", addtextlabel="d",addcolorlabel="no")
 corrplot(M, order="AOE", diag=FALSE, addtextlabel="d")
-corrplot(M, order="AOE", diag=FALSE, addtextlabel="d",cl.range="min2max")
 corrplot(M, order="AOE", type="upper")
 corrplot(M, order="AOE", type="upper", diag=FALSE)
 corrplot(M, order="AOE", type="lower", addcolorlabel="b")
@@ -407,7 +429,7 @@ corrplot(M, order="AOE", cl.ratio=0.2, cl.align="l")
 corrplot(M, order="AOE", cl.ratio=0.2, cl.align="c")
 corrplot(M, order="AOE", cl.ratio=0.2, cl.align="r")
 corrplot(M, order="AOE", addcolorlabel="bottom")
-corrplot(M, order="AOE", addcolorlabel="bottom", cl.range="min2max", addtextlabel="d")
+corrplot(M, order="AOE", addcolorlabel="bottom", addtextlabel="d")
 corrplot(M, order="AOE", addcolorlabel="no")
 
 

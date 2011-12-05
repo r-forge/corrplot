@@ -1,6 +1,6 @@
 export(colorlegend)
-export(corr.rect)
-export(corrHclust.rect)
+export(corrRect)
+export(corrRect.hclust)
 export(corrMatOrder)
 export(corrplot)
 export(corrplot.mixed)

@@ -16,51 +16,51 @@ colorlegend(colbar, labels, at=NULL,  xlim=c(0,1), ylim=c(0,1),
 
 \arguments{
   \item{colbar}{
-vector, col.
+Vector, color of colbar.
 }
 
 
   \item{labels}{
-vector, numeric or character to be written.
+Vector, numeric or character to be written.
 }
 
 
   \item{at}{
-numeric vector (quantile), giving where to put labels.
+Numeric vector (quantile), giving where to put labels.
 }
   \item{xlim}{
-see in \code{\link{plot}}.  
+See in \code{\link{plot}}.  
 }
   \item{ylim}{
-see in \code{\link{plot}}.  
+See in \code{\link{plot}}.  
 }
 
   \item{vertical}{
-logical, whether the colorlegend is vertical or horizon.  
+Logical, whether the colorlegend is vertical or horizon.  
 }
 
 
   \item{ratio.colbar}{
-the width ratio of colorbar to the total colorlegend (including colorbar, 
+The width ratio of colorbar to the total colorlegend (including colorbar, 
 segments and labels).  
 }
 
   \item{lim.segment}{
-vector (quantile) of length 2, the elements should be in [-1,1], 
+Vector (quantile) of length 2, the elements should be in [-1,1], 
 giving segments coordinates ranges. 
 }
 
   \item{align}{
-character, alignment type of labels, \code{"l"} means left, \code{"c"} means center 
+Character, alignment type of labels, \code{"l"} means left, \code{"c"} means center 
 and \code{"r"} right. 
 }
 
   \item{addlabels}{
-logical, whether add text label or not.
+Logical, whether add text label or not.
 }
 
   \item{\dots}{
-additional arguments, passed to \code{\link{plot}}.  
+Additional arguments, passed to \code{\link{plot}}.  
 }
 
 }

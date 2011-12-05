@@ -3,7 +3,7 @@
 \alias{corrplot-package}
 \docType{package}
 \title{
-visualization of a correlation matrix 
+Visualization of a correlation matrix 
 }
 \description{
 The corrplot package is a graphical display of a correlation matrix, 
@@ -13,8 +13,8 @@ confidence interval. It also contains some algorithms to do matrix reordering.
 \tabular{ll}{
 Package: \tab corrplot\cr
 Type: \tab Package\cr
-Version: \tab 0.55 \cr
-Date: \tab 2011-12-02\cr
+Version: \tab 0.60 \cr
+Date: \tab 2011-12-04\cr
 License: \tab GPL-2 | GPL-3\cr
 LazyLoad: \tab yes\cr
 }

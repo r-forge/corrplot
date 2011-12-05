@@ -1,4 +1,4 @@
-corrHclust.rect <- function(corr, k=2, col = "black", lwd = 2,
+corrRect.hclust <- function(corr, k=2, col = "black", lwd = 2,
 	method = c("complete", "ward", "single", "average","mcquitty", "median", "centroid"))
 {
 	n <- nrow(corr)

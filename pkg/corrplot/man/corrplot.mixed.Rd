@@ -16,34 +16,38 @@ corrplot.mixed(corr, lower = "number", upper = "circle",
 
 \arguments{
   \item{corr}{
-vector, the number of each cluster's members.
+Vector, the number of each cluster's members.
 }
+
   \item{lower}{
-character, the visualization method for the lower triangular correlation matrix.
+Character, the visualization method for the lower triangular correlation matrix.
 }
+
   \item{upper}{
-character, the visualization method for the upper triangular correlation matrix.
+Character, the visualization method for the upper triangular correlation matrix.
 }
+
   \item{addtextlabel}{
-character, \code{"lt"} or \code{"d"}, giving position of 
+Character, \code{"lt"} or \code{"d"}, giving position of 
 text labels, \code{"lt"} means left and top,  \code{"d"} means diagonal. 
 If \code{"no"}, do not add textlabel.
 }
+
   \item{diag}{
-character, for specifying the glyph on the principal diagonal. It is one of
+Character, for specifying the glyph on the principal diagonal. It is one of
 \code{"n"} (default, not draw anything), \code{"l"} (draw the glyphs of 
 lower triangular) or \code{"u"} (draw the glyphs of upper triangular). 
 }
   \item{bg}{
-  the background color.
+The background color.
 }
 
 \item{addgrid.col}{
-the color of grid, if \code{NULL}, don't add grid.
+The color of grid, if \code{NULL}, don't add grid.
 }
 
   \item{...}{
-additional arguments for corrplot's wrappers
+Additional arguments for corrplot's wrappers
 }
 }
 \author{
