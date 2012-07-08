@@ -7,7 +7,7 @@ corrplot <- function(corr,
 		type = c("full", "lower", "upper"), add = FALSE, 
 		col = NULL, bg = "white", title = "", zoom = 1,
 		diag = TRUE, outline = FALSE, mar = c(0,0,0,0),
-		addgrid.col = "gray", addCoef.col = NULL, addCoefasPercent = TRUE, 
+		addgrid.col = "gray", addCoef.col = NULL, addCoefasPercent = FALSE, 
 
 		order = c("original", "AOE", "FPC", "hclust", "alphabet"),
 		hclust.method = c("complete", "ward", "single", "average",
@@ -17,7 +17,7 @@ corrplot <- function(corr,
 		addtextlabel = NULL, tl.cex = 1,
 		tl.col = "red", tl.offset = 0.4, tl.srt = 90,
 
-		addcolorlabel = c("right", "bottom","no"), cl.lim = c(-1, 1),
+		addcolorlabel = NULL, cl.lim = c(-1, 1),
 		cl.length = NULL, cl.cex = 0.8, cl.ratio = 0.15, 
 		cl.align.text = "c", cl.offset=0.5,
 
@@ -36,7 +36,6 @@ corrplot <- function(corr,
 	type <- match.arg(type)
 	order <- match.arg(order)
 	hclust.method <- match.arg(hclust.method)
-	addcolorlabel <- match.arg(addcolorlabel)
 	plotCI <- match.arg(plotCI)
 	insig <- match.arg(insig)
 	
@@ -101,12 +100,29 @@ corrplot <- function(corr,
 	}
 	col.fill <- assign.color(DAT)
 	
+	isFALSE = function(x) identical(x, FALSE)
+	isTRUE = function(x) identical(x, TRUE)	
 	
-	if(is.null(addtextlabel)){
+	if(isFALSE(addtextlabel)){
+		addtextlabel <- "no"
+	}		
+	
+	if(is.null(addtextlabel)|isTRUE(addtextlabel)){
 		if(type=="full") addtextlabel <- "lt"
 		if(type=="lower") addtextlabel <- "ld"
 		if(type=="upper") addtextlabel <- "td"
 	}	
+	
+	if(isFALSE(addcolorlabel)){
+		addcolorlabel <- "no"
+	}
+	
+	if(is.null(addcolorlabel)|isTRUE(addcolorlabel)){
+		if(type=="full") addcolorlabel <- "r"
+		if(type=="lower") addcolorlabel <- "b"
+		if(type=="upper") addcolorlabel <- "r"
+	}	
+
 	
 	if(outline)
 		col.border <- "black"
@@ -120,8 +136,8 @@ corrplot <- function(corr,
 		xlabwidth <- ylabwidth <- 0
 	
 		for(i in 1:50){
-			xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right"))
-			ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), n2 + 0.5 + ylabwidth)
+			xlim <- c(m1 - 0.5 - xlabwidth, m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="r"))
+			ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="b"), n2 + 0.5 + ylabwidth)
 			plot.window(xlim + c(-0.2,0.2), ylim + c(-0.2,0.2), 
 				asp = 1, xaxs = "i", yaxs = "i")
 			x.tmp <- max(strwidth(newrownames, cex = tl.cex))
@@ -137,8 +153,8 @@ corrplot <- function(corr,
 	
 		laboffset <- strwidth("W", cex = tl.cex) * tl.offset
 		xlim <- c(m1 - 0.5 - xlabwidth - laboffset, 
-			m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="right")) + c(-0.35,0.15)
-		ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="bottom"), 
+			m2 + 0.5 + mm*cl.ratio*(addcolorlabel=="r")) + c(-0.35,0.15)
+		ylim <- c(n1 - 0.5 - nn*cl.ratio*(addcolorlabel=="b"), 
 			n2 + 0.5 + ylabwidth*abs(sin(tl.srt*pi/180)) + laboffset) + c(-0.15, 0.35)
 
 		if(.Platform$OS.type == "windows"){ 
@@ -180,7 +196,9 @@ corrplot <- function(corr,
 
 	## number
 	if(method=="number"&plotCI=="no"){
-		text(Pos[,1], Pos[,2], font = 2, round(100 * DAT), col = col.fill)
+		text(Pos[,1], Pos[,2], font = 2, col = col.fill,
+		labels = round(DAT*ifelse(addCoefasPercent, 100, 1)/zoom, 
+				ifelse(addCoefasPercent, 0, 2)))
 	}
 
 	## pie
@@ -220,14 +238,14 @@ corrplot <- function(corr,
 				dat <- cbind(c(x1, x1, x), c(y, y2, y2),
 						c(x, x2, x2), c(y1, y1 ,y))
 			}
-      	return(t(dat))
-	}
+			return(t(dat))
+		}
 
-	pos_corr <- rbind(cbind(Pos, DAT))
-	pos_corr2 <- split(pos_corr, 1:nrow(pos_corr))
-	SHADE.dat <- matrix(na.omit(unlist(lapply(pos_corr2, shade.dat))),byrow=TRUE, ncol=4)
-	segments(SHADE.dat[,1], SHADE.dat[,2], SHADE.dat[,3], 
-		SHADE.dat[,4], col = shade.col, lwd = shade.lwd)
+		pos_corr <- rbind(cbind(Pos, DAT))
+		pos_corr2 <- split(pos_corr, 1:nrow(pos_corr))
+		SHADE.dat <- matrix(na.omit(unlist(lapply(pos_corr2, shade.dat))),byrow=TRUE, ncol=4)
+		segments(SHADE.dat[,1], SHADE.dat[,2], SHADE.dat[,3], 
+			SHADE.dat[,4], col = shade.col, lwd = shade.lwd)
 	}
 
 	##square
@@ -244,7 +262,7 @@ corrplot <- function(corr,
 
 	## add grid
 	if(!is.null(addgrid.col)){
-    	symbols(Pos, add=TRUE, inches = FALSE,  bg = NA,
+    	symbols(Pos, add=TRUE, inches = FALSE,  bg = NA, 
 			squares = rep(1, len.DAT), fg = addgrid.col)
 	} 
 	
@@ -334,6 +352,7 @@ corrplot <- function(corr,
 		}
 	}
 	
+
 	
 	if(addcolorlabel!="no"){		
 		colRange <- assign.color(cl.lim)
@@ -347,13 +366,13 @@ corrplot <- function(corr,
 		labels <- seq(cl.lim[1],cl.lim[2], length=cl.length)
 		at <- seq(0,1,length=length(labels))
 		
-		if(addcolorlabel=="right"){
+		if(addcolorlabel=="r"){
 			vertical <- TRUE
 			xlim <- c(m2 + 0.5 + mm*0.02, m2 + 0.5 + mm*cl.ratio)
 			ylim <- c(n1-0.5, n2+0.5)
 		}
 
-		if(addcolorlabel=="bottom"){
+		if(addcolorlabel=="b"){
 			vertical <- FALSE
 			xlim <- c(m1-0.5, m2+0.5)
 			ylim <- c(n1 - 0.5 - nn*cl.ratio, n1 - 0.5- nn*0.02)
@@ -405,10 +424,12 @@ corrplot <- function(corr,
 		labels = round(DAT*ifelse(addCoefasPercent, 100, 1)/zoom, 
 				ifelse(addCoefasPercent, 0, 2)))
 	}
-
+	
+	## add grid, in case of the grid is ate when "diag=FALSE"
 	if(type=="full"&plotCI=="no"&!is.null(addgrid.col))
 		rect(m1-0.5, n1-0.5, m2+0.5, n2+0.5, border=addgrid.col)
-	##  draws rectangles
+	
+	##  draws rectangles, call function corrRect.hclust
 	if(!is.null(addrect)&order=="hclust"&type=="full"){
 		corrRect.hclust(corr, k = addrect, 
 			method = hclust.method, col = rect.col, lwd = rect.lwd)

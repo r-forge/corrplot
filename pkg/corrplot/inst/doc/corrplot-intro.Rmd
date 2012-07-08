@@ -1,0 +1,31 @@
+# An Introduction to corrplot
+
+
+### Taiyun Wei
+
+
+The  **corrplot** package is a graphical display of a correlation matrix, confidence interval. 
+It also contains some algorithms to do matrix reordering.  In addition, corrplot is good at details,
+including choosing color, text labels, color labels, layout, etc.
+
+
+```{r show-off, dev="CairoPNG"}
+data(mtcars)
+M <- cor(mtcars)
+##  different color series
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", 
+			"cyan", "#007FFF", "blue","#00007F"))
+col2 <- colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
+			"#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))	
+col3 <- colorRampPalette(c("red", "white", "blue"))	
+col4 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","#7FFF7F", 
+			"cyan", "#007FFF", "blue","#00007F"))	
+wb <- c("white","black")
+library(corrplot)
+corrplot(M)
+```
+
+
+$latex
+\int_x^y f(z) dz
+$

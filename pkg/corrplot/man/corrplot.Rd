@@ -27,7 +27,7 @@ corrplot(corr,
 	addtextlabel = NULL, tl.cex = 1,
 	tl.col = "red", tl.offset = 0.4, tl.srt = 90,
 
-	addcolorlabel = c("right", "bottom","no"), cl.lim = c(-1, 1),
+	addcolorlabel = NULL, cl.lim = c(-1, 1),
 	cl.length = NULL, cl.cex = 0.8, cl.ratio = 0.15, 
 	cl.align.text = "c",cl.offset = 0.5,
 
@@ -154,10 +154,12 @@ when \code{addrect} is equal or greater than 1.
 
 
   \item{addtextlabel}{
-Character, \code{"lt"}, \code{"ld"}, \code{"td"}, \code{"d"} or \code{"no"}, giving position of 
-text labels; \code{"lt"} means left and top, \code{"ld"} means left and diagonal, 
-\code{"td"} means top and diagonal(near), \code{"d"} means diagonal, \code{"no"} means
-don't add textlabel.
+Character or logical, position of text labels. If
+character, it must be one of \code{"lt"}, \code{"ld"}, \code{"td"}, \code{"d"} or \code{"no"}. 
+\code{"lt"}(default if \code{type=="full"}) 
+means left and top, \code{"ld"}(default if \code{type=="lower"}) means left and diagonal, 
+\code{"td"}(default if \code{type=="upper"}) means top and diagonal(near), \code{"d"} means diagonal, 
+\code{"no"} means don't add textlabel. 
 }
 
   \item{tl.cex}{
@@ -177,8 +179,10 @@ Numeric, for text label string rotation in degrees, see \code{\link{text}}.
 }
 
   \item{addcolorlabel}{
-Character, \code{"right"} (default), \code{"bottom"} or \code{"no"}, where to draw colorlabel. 
-If \code{"no"}, don't draw colorlabel.
+Character or logical, position of color labels; If
+character, it must be one of
+\code{"right"} (default if \code{type=="upper"} or \code{"full"}), 
+\code{"bottom"} (default if \code{type=="lower"}) or \code{"no"}, \code{"no"} means don't draw colorlabel.
 }
 
   \item{cl.lim}{
